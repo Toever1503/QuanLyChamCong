@@ -21,12 +21,9 @@ public class Position {
     public static String HR_MANAGER = "HR_MANAGER";
     public static String LEADER = "LEADER";
     public static String STAFF = "STAFF";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long positionId;
-
-
     @Column(name = "position_name", unique = true)
     private String positionName;
 }
