@@ -1,9 +1,11 @@
 package com.service.impl;
 
+import com.Util.RequestStatusUtil;
 import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.entity.DayOff;
 import com.entity.OT;
+import com.model.DayOffModel;
 import com.repository.DayOffRepository;
 import com.repository.OTRepository;
 import com.repository.StaffRepository;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -22,6 +25,12 @@ public class DayOffServiceImp implements DayOffService {
     DayOffRepository dayOffRepository;
     @Autowired
     StaffRepository staffRepository;
+
+    DayOff toEntity(DayOffModel model) {
+        if (model == null) throw new RuntimeException("DayOffModel is null");
+        return DayOff.builder().id(model.getId()).time_start(model.getTime_start()).time_end(model.getTime_end()).status(model.getStatus()).build();
+    }
+
     @Override
     public List<DayOff> findAll() {
         return dayOffRepository.findAll();
@@ -34,95 +43,58 @@ public class DayOffServiceImp implements DayOffService {
 
     @Override
     public DayOff findById(Long id) {
-        if(dayOffRepository.findById(id).isPresent())
-            return dayOffRepository.findById(id).get();
-        else
-            return null;
+        return dayOffRepository.findById(id).orElseThrow(() -> new RuntimeException("DayOff Not found"));
     }
 
     @Override
-    public DayOff add(DayOffDTO model) {
-        DayOff savedOT = null;
-        if (model != null) {
-            DayOff otEntity = new DayOff();
-            if(otEntity.getStaff()!=null){
-                if(staffRepository.findById(model.getStaff_id()).isPresent())
-                    otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
-                else {
-                    otEntity.setStaff(null);
-                }
-            }
-            else
-                otEntity.setStaff(null);
-            otEntity.setStatus(model.getStatus());
-            otEntity.setTime_start(model.getTime_start());
-            otEntity.setTime_end(model.getTime_end());
-            savedOT = dayOffRepository.save(otEntity);
-        }
-        else {
-            return null;
-        }
-        return savedOT;
+    public DayOff add(DayOffModel model) {
+        DayOff dayOff = this.toEntity(model);
+        dayOff.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        dayOff.setTime_created(Calendar.getInstance().getTime());
+        dayOff.setStatus(RequestStatusUtil.PENDING.name());
+        return this.dayOffRepository.save(dayOff);
     }
 
     @Override
-    public List<DayOff> add(List<DayOffDTO> model) {
-        List<DayOff> savedOTs = new ArrayList<>();
-        for (DayOffDTO dto: model
-        ) {
-            DayOff otEntity = new DayOff();
-            otEntity.setStaff(staffRepository.findById(dto.getId()).get());
-            otEntity.setStatus(dto.getStatus());
-            otEntity.setTime_start(dto.getTime_start());
-            otEntity.setTime_end(dto.getTime_end());
-            savedOTs.add(dayOffRepository.save(otEntity));
-        }
-        return savedOTs;
+    public List<DayOff> add(List<DayOffModel> model) {
+        return null;
     }
 
+
     @Override
-    public DayOff update(DayOffDTO model) {
-        DayOff savedOT = null;
-        if (model != null) {
-            if(dayOffRepository.findById(model.getId()).isPresent()){
-                DayOff otEntity = dayOffRepository.findById(model.getId()).get();
-                if(otEntity.getStaff() != null){
-                    if (staffRepository.findById(model.getStaff_id()).isPresent())
-                        otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
-                }else
-                    otEntity.setStaff(null);
-                if(model.getTime_start()!=null)
-                    otEntity.setTime_start(model.getTime_start());
-                if (model.getStatus()!=null)
-                    otEntity.setStatus(model.getStatus());
-                if (model.getTime_end()!=null)
-                    otEntity.setTime_end(model.getTime_end());
-                savedOT = dayOffRepository.save(otEntity);
-            }
-        }else {
-            return null;
-        }
-        return savedOT;
+    public DayOff update(DayOffModel model) {
+        DayOff dayOff = this.toEntity(model);
+        dayOff.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        return this.dayOffRepository.save(dayOff);
     }
+
 
     @Override
     public boolean deleteById(Long id) {
-        if(dayOffRepository.findById(id).isPresent()){
-            dayOffRepository.delete(dayOffRepository.findById(id).get());
-            return true;
-        }else
-            return false;
+        dayOffRepository.deleteById(id);
+        return true;
     }
 
     @Override
-    public boolean deleteByIds(List<Long> id) {
-        for (Long i: id
-        ) {
-            if(dayOffRepository.findById(i).isPresent()) {
-                dayOffRepository.delete(dayOffRepository.findById(i).get());
-            }else
-                return false;
-        }
+    public boolean deleteByIds(List<Long> ids) {
+        ids.forEach(this::deleteById);
         return true;
+    }
+
+    @Override
+    public DayOff changeStatus(Long id, RequestStatusUtil status) {
+        DayOff original = this.findById(id);
+        original.setStatus(status.name());
+        return this.dayOffRepository.save(original);
+    }
+
+    @Override
+    public Page<DayOff> findAllDayOffByEmployeeId(Long employeeId, Pageable page) {
+        return this.dayOffRepository.findAllByStaffStaffId(employeeId, page);
+    }
+
+    @Override
+    public Page<DayOff> findAllRequestForManager(Long id, Pageable page) {
+        return this.dayOffRepository.findAllRequestForManager(id, page);
     }
 }

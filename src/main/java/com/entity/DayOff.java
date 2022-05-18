@@ -20,10 +20,13 @@ public class DayOff {
     @ManyToOne(targetEntity = Staff.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "staff_id")
     private Staff staff;
+
     @Column(name = "time_start")
     private Long time_start;
+
     @Column(name = "time_end")
     private Long time_end;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time_created")

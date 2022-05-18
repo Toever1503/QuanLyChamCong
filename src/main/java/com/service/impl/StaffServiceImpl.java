@@ -10,6 +10,8 @@ import com.repository.IPositionRepository;
 import com.repository.IStaffRepository;
 import com.service.CustomUserDetail;
 import com.service.IStaffService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +19,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +37,7 @@ public class StaffServiceImpl implements IStaffService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final Logger logger = LoggerFactory.getLogger(StaffServiceImpl.class);
 
     public StaffServiceImpl(IStaffRepository staffRepository, IPositionRepository positionRepository, JwtProvider jwtProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.staffRepository = staffRepository;
@@ -39,10 +45,15 @@ public class StaffServiceImpl implements IStaffService {
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
-//
-//        Staff staff = this.staffRepository.findById(1L).orElseThrow(() -> new RuntimeException("Staff not found"));
-//        staff.setPassword(this.passwordEncoder.encode("1234"));
-//        this.staffRepository.save(staff);
+
+        try {
+//            Staff administrator = new Staff(1l, "admin", "admin@admin.com", this.passwordEncoder.encode("1234"), new Date("2022-05-18"), 100.0, null, Calendar.getInstance().getTime(), null, this.positionRepository.findByPositionName(Position.ADMINISTRATOR));
+            Staff administrator = this.staffRepository.findById(1l).get();
+            administrator.setPassword(this.passwordEncoder.encode("1234"));
+            this.staffRepository.save(administrator);
+        } catch (Exception e) {
+            logger.warn("administrator already exist");
+        }
     }
 
     Staff toEntity(StaffModel model) {
@@ -110,11 +121,13 @@ public class StaffServiceImpl implements IStaffService {
     @Override
     public JwtLoginResponse login(JwtUserLoginModel userLogin) {
         UserDetails userDetail = new CustomUserDetail(this.findByUsername(userLogin.getUsername()));
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail, userLogin.getPassword(), userDetail.getAuthorities()));
+        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail, userLogin.getPassword(), userDetail.getAuthorities()));
+        long timeValid = userLogin.isRemember() ? 86400 * 7 : 1800l;
         return JwtLoginResponse.builder()
-                .token(jwtProvider.generateToken(userLogin.getUsername(), userLogin.isRemember() ? 86400 * 7 : 0l))
+                .token(this.jwtProvider.generateToken(userLogin.getUsername(), timeValid))
                 .type("Bearer")
                 .authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .timeValid(timeValid)
                 .build();
     }
 
@@ -126,5 +139,15 @@ public class StaffServiceImpl implements IStaffService {
     @Override
     public Page<Staff> findStaffPage(Long id, Pageable page) {
         return staffRepository.findStaffPage(id, page);
+    public boolean tokenFilter(String token, HttpServletRequest req) {
+        String username = this.jwtProvider.getUsernameFromToken(token);
+        CustomUserDetail userDetail = new CustomUserDetail(this.findByUsername(username));
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                userDetail, null, userDetail.getAuthorities());
+        usernamePasswordAuthenticationToken
+                .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        return true;
+
     }
 }

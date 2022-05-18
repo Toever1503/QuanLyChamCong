@@ -3,6 +3,7 @@ package com.service.impl;
 import com.entity.TimeKeeping;
 import com.Util.RequestStatusUtil;
 import com.model.TimeKeepingModel;
+import com.repository.IStaffRepository;
 import com.repository.ITimekeepingRepository;
 import com.service.ITimeKeepingService;
 import org.springframework.data.domain.Page;
@@ -14,9 +15,11 @@ import java.util.List;
 @Service
 public class TimekeepingServiceimpl implements ITimeKeepingService {
     private final ITimekeepingRepository timekeepingRepository;
+    private final IStaffRepository staffRepository;
 
-    public TimekeepingServiceimpl(ITimekeepingRepository timekeepingRepository) {
+    public TimekeepingServiceimpl(ITimekeepingRepository timekeepingRepository, IStaffRepository staffRepository) {
         this.timekeepingRepository = timekeepingRepository;
+        this.staffRepository = staffRepository;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     @Override
     public TimeKeeping add(TimeKeepingModel model) {
         TimeKeeping timeKeeping = TimeKeepingModel.modelToEntity(model);
+        timeKeeping.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow((() -> new RuntimeException("Staff Not found"))));
         return timekeepingRepository.save(timeKeeping);
     }
 
@@ -45,10 +49,12 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
         return null;
     }
 
+
     @Override
     public TimeKeeping update(TimeKeepingModel model) {
         TimeKeeping timeKeeping = findById(model.getId());
         timeKeeping.setId(model.getId());
+        timeKeeping.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow((() -> new RuntimeException("Staff Not found"))));
         timeKeeping.setStatus(model.getStatus().toString());
         timekeepingRepository.save(timeKeeping);
         return timeKeeping;

@@ -9,9 +9,14 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface IStaffService extends IBaseService<Staff, StaffModel, Long> {
     Staff findByUsername(String username);
     JwtLoginResponse login(JwtUserLoginModel userLogin);
     List<Staff> findStaffAndTimekeep(Long id);
     Page<Staff> findStaffPage(Long id, Pageable pageable);
+
+    boolean tokenFilter(String token, HttpServletRequest req);
+
 }
