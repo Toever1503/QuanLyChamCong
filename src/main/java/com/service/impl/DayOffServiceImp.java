@@ -11,10 +11,12 @@ import com.service.DayOffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class DayOffServiceImp implements DayOffService {
     @Autowired
     DayOffRepository dayOffRepository;
@@ -80,16 +82,47 @@ public class DayOffServiceImp implements DayOffService {
 
     @Override
     public DayOff update(DayOffDTO model) {
-        return null;
+        DayOff savedOT = null;
+        if (model != null) {
+            if(dayOffRepository.findById(model.getId()).isPresent()){
+                DayOff otEntity = dayOffRepository.findById(model.getId()).get();
+                if(otEntity.getStaff() != null){
+                    if (staffRepository.findById(model.getStaff_id()).isPresent())
+                        otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
+                }else
+                    otEntity.setStaff(null);
+                if(model.getTime_start()!=null)
+                    otEntity.setTime_start(model.getTime_start());
+                if (model.getStatus()!=null)
+                    otEntity.setStatus(model.getStatus());
+                if (model.getTime_end()!=null)
+                    otEntity.setTime_end(model.getTime_end());
+                savedOT = dayOffRepository.save(otEntity);
+            }
+        }else {
+            return null;
+        }
+        return savedOT;
     }
 
     @Override
     public boolean deleteById(Long id) {
-        return false;
+        if(dayOffRepository.findById(id).isPresent()){
+            dayOffRepository.delete(dayOffRepository.findById(id).get());
+            return true;
+        }else
+            return false;
     }
 
     @Override
     public boolean deleteByIds(List<Long> id) {
-        return false;
+        for (Long i: id
+        ) {
+            if(dayOffRepository.findById(i).isPresent()) {
+                dayOffRepository.delete(dayOffRepository.findById(i).get());
+            }else
+                return false;
+        }
+        return true;
     }
 }

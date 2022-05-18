@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.dto.ResponseDto;
 import com.service.OTService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,12 +23,15 @@ public class OtController {
     @Transactional
     @GetMapping(produces = "application/json",value ="/all")
     public ResponseDto getAllOtReq(Pageable pageable){
-        return  ResponseDto.of(otService.findAll(pageable).stream().map(ot -> OTDto.builder().id(ot.getId()).status(ot.getStatus()).time_start(ot.getTime_start()).time_end(ot.getTime_end()).time_created(ot.getTime_created()).build()).collect(Collectors.toList()),"GET");
+        List<OTDto> dtoList = otService.findAll(pageable).stream().map(ot -> OTDto.builder().id(ot.getId()).multiply(ot.getMultiply()).status(ot.getStatus()).time_start(ot.getTime_start()).time_end(ot.getTime_end()).time_created(ot.getTime_created()).build()).collect(Collectors.toList());
+        return  ResponseDto.of(dtoList,"GET");
     }
     @Transactional
     @GetMapping(produces = "application/json",value ="/{manager_id}/all")
     public ResponseDto getAllOtReqForMng(@PathVariable("manager_id") Long idm, Pageable pageable){
-        return ResponseDto.of(otService.findAll(pageable).stream().filter(ot -> ot.getStaff().getStaffId() == idm).map(ot -> OTDto.builder().id(ot.getId()).status(ot.getStatus()).time_start(ot.getTime_start()).time_end(ot.getTime_end()).time_created(ot.getTime_created()).build()).collect(Collectors.toList()),"GET");
+        List<OTDto> dtoList = otService.findAll(pageable).stream().filter(ot -> ot.getStaff().getStaffId() == idm).map(ot -> OTDto.builder().id(ot.getId()).status(ot.getStatus()).time_start(ot.getTime_start()).time_end(ot.getTime_end()).time_created(ot.getTime_created()).build()).collect(Collectors.toList());
+
+        return ResponseDto.of(dtoList,"GET");
     }
 
     @Transactional
