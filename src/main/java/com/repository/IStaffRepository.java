@@ -17,4 +17,5 @@ public interface IStaffRepository extends JpaRepository<Staff, Long> {
 
     @Query("select s from Staff as s JOIN TimeKeeping as t ON s.staffId = t.staff.staffId where s.manager.staffId = ?1")
     Page<Staff> findStaffPage(Long id ,Pageable pageable);
+
 }

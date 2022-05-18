@@ -1,30 +1,25 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
-import com.dto.DayOffDTO;
-import com.dto.OTDto;
 import com.entity.DayOff;
-import com.entity.OT;
 import com.model.DayOffModel;
-import com.repository.DayOffRepository;
-import com.repository.OTRepository;
-import com.repository.StaffRepository;
+import com.repository.IDayOffRepository;
+import com.repository.IStaffRepository;
 import com.service.DayOffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 @Service
 public class DayOffServiceImp implements DayOffService {
     @Autowired
-    DayOffRepository dayOffRepository;
+    IDayOffRepository dayOffRepository;
     @Autowired
-    StaffRepository staffRepository;
+    IStaffRepository staffRepository;
 
     DayOff toEntity(DayOffModel model) {
         if (model == null) throw new RuntimeException("DayOffModel is null");

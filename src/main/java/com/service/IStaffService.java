@@ -15,7 +15,7 @@ public interface IStaffService extends IBaseService<Staff, StaffModel, Long> {
     Staff findByUsername(String username);
     JwtLoginResponse login(JwtUserLoginModel userLogin);
     List<Staff> findStaffAndTimekeep(Long id);
-    Page<Staff> findStaffPage(Long id, Pageable pageable);
+    Page<Staff> findStaffOfManager(Long managerId, Pageable pageable);
 
     boolean tokenFilter(String token, HttpServletRequest req);
 

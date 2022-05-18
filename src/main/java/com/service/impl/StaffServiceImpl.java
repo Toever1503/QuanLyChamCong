@@ -13,11 +13,9 @@ import com.service.IStaffService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -45,7 +43,6 @@ public class StaffServiceImpl implements IStaffService {
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
-
         try {
 //            Staff administrator = new Staff(1l, "admin", "admin@admin.com", this.passwordEncoder.encode("1234"), new Date("2022-05-18"), 100.0, null, Calendar.getInstance().getTime(), null, this.positionRepository.findByPositionName(Position.ADMINISTRATOR));
             Staff administrator = this.staffRepository.findById(1l).get();
@@ -137,8 +134,10 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
-    public Page<Staff> findStaffPage(Long id, Pageable page) {
-        return staffRepository.findStaffPage(id, page);
+    public Page<Staff> findStaffOfManager(Long managerId, Pageable page) {
+        return staffRepository.findStaffPage(managerId, page);
+    }
+
     public boolean tokenFilter(String token, HttpServletRequest req) {
         String username = this.jwtProvider.getUsernameFromToken(token);
         CustomUserDetail userDetail = new CustomUserDetail(this.findByUsername(username));

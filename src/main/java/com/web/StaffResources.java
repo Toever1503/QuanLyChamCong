@@ -3,13 +3,11 @@ package com.web;
 import com.config.jwt.JwtUserLoginModel;
 import com.dto.ResponseDto;
 import com.dto.StaffDto;
-import com.entity.Staff;
 import com.model.StaffModel;
 import com.service.IStaffService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("api/staffs")
@@ -52,8 +50,8 @@ public class StaffResources {
 //        return ResponseDto.of(this.staffService.findStaffAndTimekeep(id), "Get staff from id manager with id: " + id);
 //    }
 
-    @GetMapping("{id}")
-    public ResponseDto getStaffByIdPage(@PathVariable Long id, Pageable page) {
-        return ResponseDto.of(this.staffService.findStaffPage(id, page), "Get staff from id manager with id: " + id);
+    @GetMapping("get-staff-of-manager/{id}")
+    public ResponseDto getStaffOfManager(@PathVariable Long id, Pageable page) {
+        return ResponseDto.of(this.staffService.findStaffOfManager(id, page).map(StaffDto::toDto), "Get staff from id manager with id: " + id);
     }
 }

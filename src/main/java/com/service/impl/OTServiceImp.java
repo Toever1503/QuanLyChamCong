@@ -1,27 +1,25 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
-import com.dto.OTDto;
 import com.entity.OT;
 import com.entity.OtModel;
-import com.repository.OTRepository;
-import com.repository.StaffRepository;
+import com.repository.IOTRepository;
+import com.repository.IStaffRepository;
 import com.service.OTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 @Service
 public class OTServiceImp implements OTService {
     @Autowired
-    OTRepository otRepository;
+    IOTRepository otRepository;
     @Autowired
-    StaffRepository staffRepository;
+    IStaffRepository staffRepository;
 
     @Override
     public List<OT> findAll() {
