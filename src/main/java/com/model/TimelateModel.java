@@ -1,35 +1,40 @@
 package com.model;
 
-import com.Util.RequestStatusUtil;
+import com.dto.StaffDto;
 import com.entity.Staff;
-import com.entity.TimeKeeping;
+import com.entity.TimeLate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
-public class TimeKeepingModel {
+public class TimelateModel {
     private Long id;
 
     private Long timeIn;
 
     private String note;
 
-    private RequestStatusUtil status;
+    private String status;
 
     private Long staff;
 
-    public static TimeKeeping modelToEntity(TimeKeepingModel model){
-        if (model == null) return null;
-        return TimeKeeping.builder()
+    public static TimeLate modelToEntity(TimelateModel model){
+        if(model == null) return null;
+        return TimeLate.builder()
                 .id(model.getId())
                 .timeIn(model.getTimeIn())
                 .note(model.getNote())
-                .status(model.getStatus() == null ? RequestStatusUtil.PENDING.toString() : RequestStatusUtil.PENDING.toString())
+                .status(model.getStatus())
                 .build();
     }
 }

@@ -13,6 +13,7 @@ import com.service.IStaffService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -131,6 +132,13 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public List<Staff> findStaffAndTimekeep(Long id) {
+        return staffRepository.findStaffAndTimeKeep(id);
+    }
+
+    @Override
+    public Page<Staff> findStaffPage(Long id, Pageable page) {
+        return staffRepository.findStaffPage(id, page);
     public boolean tokenFilter(String token, HttpServletRequest req) {
         String username = this.jwtProvider.getUsernameFromToken(token);
         CustomUserDetail userDetail = new CustomUserDetail(this.findByUsername(username));
@@ -140,5 +148,6 @@ public class StaffServiceImpl implements IStaffService {
                 .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         return true;
+
     }
 }

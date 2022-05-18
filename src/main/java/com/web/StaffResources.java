@@ -47,4 +47,13 @@ public class StaffResources {
         return ResponseDto.of(this.staffService.login(userLoginModel), "Login ");
     }
 
+//    @GetMapping("{id}")
+//    public ResponseDto getStaffById(@PathVariable Long id) {
+//        return ResponseDto.of(this.staffService.findStaffAndTimekeep(id), "Get staff from id manager with id: " + id);
+//    }
+
+    @GetMapping("{id}")
+    public ResponseDto getStaffByIdPage(@PathVariable Long id, Pageable page) {
+        return ResponseDto.of(this.staffService.findStaffPage(id, page), "Get staff from id manager with id: " + id);
+    }
 }

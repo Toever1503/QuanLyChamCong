@@ -16,8 +16,6 @@ public class TimeKeepingDto {
 
     private Long timeIn;
 
-    private Long timeOut;
-
     private String note;
 
     private String status;
@@ -28,7 +26,6 @@ public class TimeKeepingDto {
         return TimeKeepingDto.builder()
                 .id(entity.getId())
                 .timeIn(entity.getTimeIn())
-                .timeOut(entity.getTimeOut())
                 .note(entity.getNote())
                 .status(entity.getStatus())
                 .staff(entity.getStaff())

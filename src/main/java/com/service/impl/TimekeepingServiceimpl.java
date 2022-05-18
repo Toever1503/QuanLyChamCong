@@ -55,10 +55,6 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
         TimeKeeping timeKeeping = findById(model.getId());
         timeKeeping.setId(model.getId());
         timeKeeping.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow((() -> new RuntimeException("Staff Not found"))));
-//        timeKeeping.setDate(model.getDate());
-//        timeKeeping.setTimeIn(model.getTimeIn());
-//        timeKeeping.setTimeOut(model.getTimeOut());
-//        timeKeeping.setNote(model.getNote());
         timeKeeping.setStatus(model.getStatus().toString());
         timekeepingRepository.save(timeKeeping);
         return timeKeeping;
@@ -66,11 +62,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
 
     @Override
     public boolean deleteById(Long id) {
-        try {
             timekeepingRepository.deleteById(id);
-        } catch (Exception e) {
-            return false;
-        }
         return true;
     }
 
