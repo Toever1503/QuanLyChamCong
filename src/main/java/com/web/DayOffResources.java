@@ -1,64 +1,55 @@
 package com.web;
 
+
 import com.Util.RequestStatusUtil;
 import com.dto.DayOffDTO;
+import com.dto.OTDto;
 import com.dto.ResponseDto;
+import com.model.DayOffModel;
 import com.service.DayOffService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
-@RequestMapping("/api/dayoff")
+@RequestMapping("api/day-offs")
 public class DayOffResources {
-    @Autowired
-    DayOffService dayOffService;
 
-    @Transactional
-    @GetMapping(produces = "application/json", value = "/all")
-    public ResponseDto getAllOtReq(Pageable pageable) {
-        List<DayOffDTO> dayOffDTOList = dayOffService.findAll(pageable).stream().map(ot -> DayOffDTO.builder().id(ot.getId()).status(ot.getStatus()).time_start(ot.getTime_start()).time_end(ot.getTime_end()).time_created(ot.getTime_created()).build()).collect(Collectors.toList());
-        return ResponseDto.of(dayOffDTOList, "GET");
+    private final DayOffService dayOffService;
+
+    public DayOffResources(DayOffService dayOffService) {
+        this.dayOffService = dayOffService;
     }
 
-    @Transactional
-    @GetMapping(produces = "application/json", value = "/{manager_id}/all")
-    public ResponseDto getAllOtReqForMng(@PathVariable("manager_id") Long idm, Pageable pageable) {
-        List<DayOffDTO> dayOffDTOList = dayOffService.findAll(pageable).stream().filter(ot -> ot.getStaff().getStaffId() == idm).map(ot -> DayOffDTO.builder().id(ot.getId()).status(ot.getStatus()).time_start(ot.getTime_start()).time_end(ot.getTime_end()).time_created(ot.getTime_created()).build()).collect(Collectors.toList());
-        return ResponseDto.of(dayOffDTOList, "GET");
+    @GetMapping
+    public ResponseDto gettAll(Pageable page) {
+        return ResponseDto.of(this.dayOffService.findAll(page).map(DayOffDTO::toDto), "Get all dayoff");
     }
 
-    @Transactional
-    @PostMapping(produces = "application/json", value = "/add")
-    public ResponseDto addNewOT(@RequestBody DayOffDTO otDto) {
-        if (otDto != null) {
-            return ResponseDto.of(dayOffService.add(otDto), "POST");
-        } else
-            return ResponseDto.of(null, "POST");
+    @GetMapping("get-request-by-manager/{id}")
+    public ResponseDto getRequestByManager(@PathVariable Long id, Pageable page) {
+        return ResponseDto.of(this.dayOffService.findAllRequestForManager(id, page).map(DayOffDTO::toDto), "Get all request dayoff of manager: " + id);
     }
 
-    @Transactional
-    @PutMapping(produces = "application/json", value = "/edit/{id}")
-    public ResponseDto editOT(@RequestBody DayOffDTO otDto, @PathVariable("id") Long id) {
-        if (otDto != null) {
-            otDto.setId(id);
-            return ResponseDto.of(dayOffService.update(otDto), "POST");
-        } else
-            return ResponseDto.of(null, "POST");
+    @PostMapping
+    public ResponseDto add(@RequestBody DayOffModel model) {
+        model.setId(null);
+        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.add(model)), "Add dayoff");
     }
 
-    @Transactional
-    @DeleteMapping(produces = "application/json", value = "/delete/{id}")
-    public ResponseDto delOt(@PathVariable("id") Long id) {
-        return ResponseDto.of(dayOffService.deleteById(id), "Delete");
+    @PatchMapping("{id}")
+    public ResponseDto update(@PathVariable Long id, @RequestBody DayOffModel model, @RequestParam RequestStatusUtil status) {
+        model.setId(id);
+        model.setStatus(status.name());
+        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.update(model)), "update dayoff");
     }
 
-    @PatchMapping("change-status/{id}")
+    @DeleteMapping("{id}")
+    public ResponseDto deleteById(@PathVariable Long id) {
+        return ResponseDto.of(this.dayOffService.deleteById(id) == false ? null : true, "Delete dayoff with id: " + id);
+    }
+
+    @GetMapping("change-status/{id}")
     public ResponseDto changeStatus(@PathVariable Long id, @RequestParam RequestStatusUtil status) {
-        return ResponseDto.of(dayOffService.changeStatus(id, status), "Change status");
+        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.changeStatus(id, status)), "Change status dayoff with id: " + id);
     }
 }

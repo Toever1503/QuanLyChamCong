@@ -3,6 +3,7 @@ package com.service.impl;
 import com.Util.RequestStatusUtil;
 import com.dto.OTDto;
 import com.entity.OT;
+import com.entity.OtModel;
 import com.repository.OTRepository;
 import com.repository.StaffRepository;
 import com.service.OTService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -31,76 +33,40 @@ public class OTServiceImp implements OTService {
         return otRepository.findAll(page);
     }
 
+    OT toEntity(OtModel model){
+        if(model == null) throw new RuntimeException("Ot Model is null");
+        return OT.builder()
+                .id(model.getId())
+                .time_start(model.getTime_start())
+                .time_end(model.getTime_end())
+                .multiply(model.getMultiply())
+                .status(model.getStatus())
+                .build();
+    }
+
     @Override
     public OT findById(Long id) {
         return otRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
 
     @Override
-    public OT add(OTDto model) {
-        OT savedOT = null;
-        if (model != null) {
-            OT otEntity = new OT();
-            if (otEntity.getStaff() != null) {
-                if (staffRepository.findById(model.getStaff_id()).isPresent())
-                    otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
-                else {
-                    otEntity.setStaff(null);
-                }
-            } else
-                otEntity.setStaff(null);
-            otEntity.setStatus(RequestStatusUtil.PENDING.name());
-            otEntity.setMultiply(model.getMultiply());
-            otEntity.setTime_start(model.getTime_start());
-            otEntity.setTime_end(model.getTime_end());
-            savedOT = otRepository.save(otEntity);
-        } else {
-            return null;
-        }
-        return savedOT;
+    public OT add(OtModel model) {
+        OT entity = toEntity(model);
+        entity.setStaff(this.staffRepository.findById(model.getStaff_id()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        entity.setStatus(RequestStatusUtil.PENDING.name());
+        entity.setTime_created(Calendar.getInstance().getTime());
+        return this.otRepository.save(entity);
     }
 
     @Override
-    public List<OT> add(List<OTDto> model) {
-        List<OT> savedOTs = new ArrayList<>();
-        for (OTDto ot : model
-        ) {
-            OT otEntity = new OT();
-            otEntity.setStaff(staffRepository.findById(ot.getId()).get());
-            otEntity.setStatus(ot.getStatus());
-            otEntity.setTime_start(ot.getTime_start());
-            otEntity.setTime_end(ot.getTime_end());
-            otEntity.setMultiply(ot.getMultiply());
-            savedOTs.add(otRepository.save(otEntity));
-        }
-        return savedOTs;
+    public List<OT> add(List<OtModel> model) {
+        return null;
     }
 
     @Override
-    public OT update(OTDto model) {
-        OT savedOT = null;
-        if (model != null) {
-            if (otRepository.findById(model.getId()).isPresent()) {
-                OT otEntity = otRepository.findById(model.getId()).get();
-                if (otEntity.getStaff() != null) {
-                    if (staffRepository.findById(model.getStaff_id()).isPresent())
-                        otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
-                } else
-                    otEntity.setStaff(null);
-                if (model.getTime_start() != null)
-                    otEntity.setTime_start(model.getTime_start());
-                if (model.getStatus() != null)
-                    otEntity.setStatus(model.getStatus());
-                if (model.getTime_end() != null)
-                    otEntity.setTime_end(model.getTime_end());
-                if (model.getMultiply() != null)
-                    otEntity.setMultiply(model.getMultiply());
-                savedOT = otRepository.save(otEntity);
-            }
-        } else {
-            return null;
-        }
-        return savedOT;
+    public OT update(OtModel model) {
+//        OT entity = toEntity(model);
+        return null;
     }
 
     @Override
@@ -129,5 +95,10 @@ public class OTServiceImp implements OTService {
         OT original = this.findById(id);
         original.setStatus(status.name());
         return this.otRepository.save(original);
+    }
+
+    @Override
+    public Page<OT> findAllRequestForManager(Long id, Pageable page) {
+        return this.otRepository.findAllRequestForManager(id, page);
     }
 }
