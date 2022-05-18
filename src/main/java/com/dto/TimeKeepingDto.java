@@ -22,7 +22,7 @@ public class TimeKeepingDto {
 
     private String status;
 
-    private Staff staff;
+    private Staff staffDto;
 
     public static TimeKeepingDto entityToDto(TimeKeeping entity) {
         return TimeKeepingDto.builder()
@@ -31,7 +31,7 @@ public class TimeKeepingDto {
                 .timeOut(entity.getTimeOut())
                 .note(entity.getNote())
                 .status(entity.getStatus())
-                .staff(entity.getStaff())
+                .staffDto(entity.getStaff())
                 .build();
     }
 }

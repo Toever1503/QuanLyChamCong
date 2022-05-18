@@ -49,10 +49,6 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     public TimeKeeping update(TimeKeepingModel model) {
         TimeKeeping timeKeeping = findById(model.getId());
         timeKeeping.setId(model.getId());
-//        timeKeeping.setDate(model.getDate());
-//        timeKeeping.setTimeIn(model.getTimeIn());
-//        timeKeeping.setTimeOut(model.getTimeOut());
-//        timeKeeping.setNote(model.getNote());
         timeKeeping.setStatus(model.getStatus().toString());
         timekeepingRepository.save(timeKeeping);
         return timeKeeping;

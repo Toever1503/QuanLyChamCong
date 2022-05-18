@@ -11,6 +11,7 @@ import com.repository.IStaffRepository;
 import com.service.CustomUserDetail;
 import com.service.IStaffService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -115,5 +116,15 @@ public class StaffServiceImpl implements IStaffService {
                 .type("Bearer")
                 .authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .build();
+    }
+
+    @Override
+    public List<Staff> findStaffAndTimekeep(Long id) {
+        return staffRepository.findStaffAndTimeKeep(id);
+    }
+
+    @Override
+    public Page<Staff> findStaffPage(Long id, Pageable page) {
+        return staffRepository.findStaffPage(id, page);
     }
 }
