@@ -4,6 +4,7 @@ import com.Util.RequestStatusUtil;
 import com.entity.TimeKeeping;
 import com.entity.TimeLate;
 import com.model.TimelateModel;
+import com.repository.IStaffRepository;
 import com.repository.ITimeLateRepository;
 import com.service.ITimeLateService;
 import org.springframework.data.domain.Page;
@@ -15,9 +16,11 @@ import java.util.List;
 @Service
 public class TimeLateServiceImpl implements ITimeLateService {
     final private ITimeLateRepository timeLateRepository;
+    final private IStaffRepository staffRepository;
 
-    public TimeLateServiceImpl(ITimeLateRepository timeLateRepository) {
+    public TimeLateServiceImpl(ITimeLateRepository timeLateRepository, IStaffRepository staffRepository) {
         this.timeLateRepository = timeLateRepository;
+        this.staffRepository = staffRepository;
     }
 
     @Override
@@ -38,6 +41,7 @@ public class TimeLateServiceImpl implements ITimeLateService {
     @Override
     public TimeLate add(TimelateModel model) {
         TimeLate timeLate = TimelateModel.modelToEntity(model);
+        timeLate.setStaff(staffRepository.findById(model.getStaffModelId()).get());
         return timeLateRepository.save(timeLate);
     }
 

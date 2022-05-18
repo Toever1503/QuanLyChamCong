@@ -1,5 +1,6 @@
 package com.model;
 
+import com.dto.StaffDto;
 import com.entity.Staff;
 import com.entity.TimeLate;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,6 @@ public class TimelateModel {
                 .timeOut(model.getTimeOut())
                 .note(model.getNote())
                 .status(model.getStatus())
-                .staff(model.staffModelId == null ? null : Staff.builder().staffId(model.staffModelId).build())
                 .build();
     }
 }
