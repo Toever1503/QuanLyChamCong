@@ -17,7 +17,6 @@ public class StaffDto {
 
     private String staffName;
     private String email;
-    private String password;
     private Date birthday;
     private Double salary;
     private String avatar;
@@ -31,7 +30,6 @@ public class StaffDto {
                 .staffId(entity.getStaffId())
                 .staffName(entity.getStaffName())
                 .email(entity.getEmail())
-                .password(entity.getPassword())
                 .birthday(entity.getBirthday())
                 .salary(entity.getSalary())
                 .avatar(entity.getAvatar())

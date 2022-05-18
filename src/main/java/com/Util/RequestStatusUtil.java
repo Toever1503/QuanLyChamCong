@@ -1,4 +1,4 @@
-package com.model;
+package com.Util;
 
 public enum RequestStatusUtil {
     PENDING,

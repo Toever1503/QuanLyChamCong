@@ -1,7 +1,6 @@
-package com.controller;
+package com.web;
 
 import com.dto.DayOffDTO;
-import com.dto.OTDto;
 import com.dto.ResponseDto;
 import com.service.DayOffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dayoff")
-public class DayOffController {
+public class DayOffResources {
     @Autowired
     DayOffService dayOffService;
 
