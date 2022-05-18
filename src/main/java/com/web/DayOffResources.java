@@ -1,5 +1,6 @@
 package com.web;
 
+import com.Util.RequestStatusUtil;
 import com.dto.DayOffDTO;
 import com.dto.ResponseDto;
 import com.service.DayOffService;
@@ -54,5 +55,10 @@ public class DayOffResources {
     @DeleteMapping(produces = "application/json", value = "/delete/{id}")
     public ResponseDto delOt(@PathVariable("id") Long id) {
         return ResponseDto.of(dayOffService.deleteById(id), "Delete");
+    }
+
+    @PatchMapping("change-status/{id}")
+    public ResponseDto changeStatus(@PathVariable Long id, @RequestParam RequestStatusUtil status) {
+        return ResponseDto.of(dayOffService.changeStatus(id, status), "Change status");
     }
 }

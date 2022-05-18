@@ -43,7 +43,9 @@ public class StaffServiceImpl implements IStaffService {
         this.passwordEncoder = passwordEncoder;
 
         try {
-            Staff administrator = new Staff(1l, "admin", "admin@admin.com", this.passwordEncoder.encode("1234"), new Date("2022-05-18"), 100.0, null, Calendar.getInstance().getTime(), null, this.positionRepository.findByPositionName(Position.ADMINISTRATOR));
+//            Staff administrator = new Staff(1l, "admin", "admin@admin.com", this.passwordEncoder.encode("1234"), new Date("2022-05-18"), 100.0, null, Calendar.getInstance().getTime(), null, this.positionRepository.findByPositionName(Position.ADMINISTRATOR));
+            Staff administrator = this.staffRepository.findById(1l).get();
+            administrator.setPassword(this.passwordEncoder.encode("1234"));
             this.staffRepository.save(administrator);
         } catch (Exception e) {
             logger.warn("administrator already exist");

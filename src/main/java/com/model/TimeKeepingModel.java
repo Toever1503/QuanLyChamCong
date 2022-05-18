@@ -23,7 +23,7 @@ public class TimeKeepingModel {
 
     private RequestStatusUtil status;
 
-    private Staff staff;
+    private Long staff;
 
     public static TimeKeeping modelToEntity(TimeKeepingModel model){
         if (model == null) return null;
@@ -33,7 +33,6 @@ public class TimeKeepingModel {
                 .timeOut(model.getTimeOut())
                 .note(model.getNote())
                 .status(model.getStatus() == null ? RequestStatusUtil.PENDING.toString() : RequestStatusUtil.PENDING.toString())
-                .staff(model.getStaff() == null ? null : model.getStaff())
                 .build();
     }
 }

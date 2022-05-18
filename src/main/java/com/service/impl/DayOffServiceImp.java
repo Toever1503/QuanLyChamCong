@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import com.Util.RequestStatusUtil;
 import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.entity.DayOff;
@@ -22,6 +23,7 @@ public class DayOffServiceImp implements DayOffService {
     DayOffRepository dayOffRepository;
     @Autowired
     StaffRepository staffRepository;
+
     @Override
     public List<DayOff> findAll() {
         return dayOffRepository.findAll();
@@ -34,7 +36,7 @@ public class DayOffServiceImp implements DayOffService {
 
     @Override
     public DayOff findById(Long id) {
-        if(dayOffRepository.findById(id).isPresent())
+        if (dayOffRepository.findById(id).isPresent())
             return dayOffRepository.findById(id).get();
         else
             return null;
@@ -45,21 +47,19 @@ public class DayOffServiceImp implements DayOffService {
         DayOff savedOT = null;
         if (model != null) {
             DayOff otEntity = new DayOff();
-            if(otEntity.getStaff()!=null){
-                if(staffRepository.findById(model.getStaff_id()).isPresent())
+            if (otEntity.getStaff() != null) {
+                if (staffRepository.findById(model.getStaff_id()).isPresent())
                     otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
                 else {
                     otEntity.setStaff(null);
                 }
-            }
-            else
+            } else
                 otEntity.setStaff(null);
             otEntity.setStatus(model.getStatus());
             otEntity.setTime_start(model.getTime_start());
             otEntity.setTime_end(model.getTime_end());
             savedOT = dayOffRepository.save(otEntity);
-        }
-        else {
+        } else {
             return null;
         }
         return savedOT;
@@ -68,7 +68,7 @@ public class DayOffServiceImp implements DayOffService {
     @Override
     public List<DayOff> add(List<DayOffDTO> model) {
         List<DayOff> savedOTs = new ArrayList<>();
-        for (DayOffDTO dto: model
+        for (DayOffDTO dto : model
         ) {
             DayOff otEntity = new DayOff();
             otEntity.setStaff(staffRepository.findById(dto.getId()).get());
@@ -84,22 +84,22 @@ public class DayOffServiceImp implements DayOffService {
     public DayOff update(DayOffDTO model) {
         DayOff savedOT = null;
         if (model != null) {
-            if(dayOffRepository.findById(model.getId()).isPresent()){
+            if (dayOffRepository.findById(model.getId()).isPresent()) {
                 DayOff otEntity = dayOffRepository.findById(model.getId()).get();
-                if(otEntity.getStaff() != null){
+                if (otEntity.getStaff() != null) {
                     if (staffRepository.findById(model.getStaff_id()).isPresent())
                         otEntity.setStaff(staffRepository.findById(model.getStaff_id()).get());
-                }else
+                } else
                     otEntity.setStaff(null);
-                if(model.getTime_start()!=null)
+                if (model.getTime_start() != null)
                     otEntity.setTime_start(model.getTime_start());
-                if (model.getStatus()!=null)
+                if (model.getStatus() != null)
                     otEntity.setStatus(model.getStatus());
-                if (model.getTime_end()!=null)
+                if (model.getTime_end() != null)
                     otEntity.setTime_end(model.getTime_end());
                 savedOT = dayOffRepository.save(otEntity);
             }
-        }else {
+        } else {
             return null;
         }
         return savedOT;
@@ -107,22 +107,29 @@ public class DayOffServiceImp implements DayOffService {
 
     @Override
     public boolean deleteById(Long id) {
-        if(dayOffRepository.findById(id).isPresent()){
+        if (dayOffRepository.findById(id).isPresent()) {
             dayOffRepository.delete(dayOffRepository.findById(id).get());
             return true;
-        }else
+        } else
             return false;
     }
 
     @Override
     public boolean deleteByIds(List<Long> id) {
-        for (Long i: id
+        for (Long i : id
         ) {
-            if(dayOffRepository.findById(i).isPresent()) {
+            if (dayOffRepository.findById(i).isPresent()) {
                 dayOffRepository.delete(dayOffRepository.findById(i).get());
-            }else
+            } else
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public DayOff changeStatus(Long id, RequestStatusUtil status) {
+        DayOff original = this.findById(id);
+        original.setStatus(status.name());
+        return this.dayOffRepository.save(original);
     }
 }
