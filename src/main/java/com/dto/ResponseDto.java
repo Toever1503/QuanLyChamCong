@@ -26,4 +26,5 @@ public class ResponseDto implements Serializable {
     public static ResponseDto of(Object data, String prefix) {
         return new ResponseDto(data != null ? prefix.concat(" successfully!") : prefix.concat(" failed!"), data != null ? "SUCCESS" : "ERROR", data);
     }
+
 }

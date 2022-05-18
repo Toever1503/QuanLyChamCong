@@ -1,18 +1,21 @@
 package com.entity;
 
-import lombok.*;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
-@Table(name ="staffs")
+@Table(name = "staffs")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +40,16 @@ public class Staff {
     @Column(name = "avatar")
     private String avatar;
 
-    @Temporal(TemporalType.DATE)
+
+
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Staff manager;
-    @OneToMany(mappedBy = "staff",targetEntity = OT.class)
-    private Set<OT> otSet;
+
+    @ManyToOne
+    @JoinColumn(name = "position_id")
+    private Position position;
 }
