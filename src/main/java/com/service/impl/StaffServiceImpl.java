@@ -10,17 +10,19 @@ import com.repository.IPositionRepository;
 import com.repository.IStaffRepository;
 import com.service.CustomUserDetail;
 import com.service.IStaffService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,7 @@ public class StaffServiceImpl implements IStaffService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final Logger logger = LoggerFactory.getLogger(StaffServiceImpl.class);
 
     public StaffServiceImpl(IStaffRepository staffRepository, IPositionRepository positionRepository, JwtProvider jwtProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.staffRepository = staffRepository;
@@ -38,10 +41,13 @@ public class StaffServiceImpl implements IStaffService {
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
-//
-//        Staff staff = this.staffRepository.findById(1L).orElseThrow(() -> new RuntimeException("Staff not found"));
-//        staff.setPassword(this.passwordEncoder.encode("1234"));
-//        this.staffRepository.save(staff);
+
+        try {
+            Staff administrator = new Staff(1l, "admin", "admin@admin.com", this.passwordEncoder.encode("1234"), new Date("2022-05-18"), 100.0, null, Calendar.getInstance().getTime(), null, this.positionRepository.findByPositionName(Position.ADMINISTRATOR));
+            this.staffRepository.save(administrator);
+        } catch (Exception e) {
+            logger.warn("administrator already exist");
+        }
     }
 
     Staff toEntity(StaffModel model) {
