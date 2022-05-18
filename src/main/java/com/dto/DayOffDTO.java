@@ -2,7 +2,6 @@ package com.dto;
 
 import com.entity.DayOff;
 import lombok.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Getter
 @Setter
@@ -11,16 +10,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @AllArgsConstructor
 public class DayOffDTO {
     private Long id;
-    private Long staff_id;
+    private String staff;
     private Long time_start;
     private Long time_end;
     private java.util.Date time_created;
     private String status;
 
-    public static DayOffDTO toDto(DayOff entity){
-        if(entity == null) throw new RuntimeException("Entity is null");
+    public static DayOffDTO toDto(DayOff entity) {
+        if (entity == null) throw new RuntimeException("Entity is null");
         return DayOffDTO.builder()
                 .id(entity.getId())
+                .staff(entity.getStaff().getStaffName())
+                .time_start(entity.getTime_start())
+                .time_end(entity.getTime_end())
+                .time_created(entity.getTime_created())
+                .status(entity.getStatus())
                 .build();
     }
 

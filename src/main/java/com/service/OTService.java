@@ -1,10 +1,10 @@
 package com.service;
 
 import com.Util.RequestStatusUtil;
-import com.dto.OTDto;
 import com.entity.OT;
+import com.entity.OtModel;
 
-public interface OTService extends IBaseService<OT,OTDto,Long>{
+public interface OTService extends IBaseService<OT, OtModel, Long> {
 
     OT changeStatus(Long id, RequestStatusUtil status);
 }

@@ -22,7 +22,7 @@ public class BeanConfiguration {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("10.0.0.109:8081", "10.0.0.109:8080")
+                        .allowedOrigins("10.0.0.109:8081", "10.0.0.109:8080", "10.0.0.83:8080")
                         .allowedOriginPatterns("*.*.*.*:*")
                         .allowCredentials(true)
                         .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS");
