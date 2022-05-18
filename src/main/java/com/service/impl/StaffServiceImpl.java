@@ -16,13 +16,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,13 +120,25 @@ public class StaffServiceImpl implements IStaffService {
     @Override
     public JwtLoginResponse login(JwtUserLoginModel userLogin) {
         UserDetails userDetail = new CustomUserDetail(this.findByUsername(userLogin.getUsername()));
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail, userLogin.getPassword(), userDetail.getAuthorities()));
+        this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail, userLogin.getPassword(), userDetail.getAuthorities()));
         long timeValid = userLogin.isRemember() ? 86400 * 7 : 1800l;
         return JwtLoginResponse.builder()
-                .token(jwtProvider.generateToken(userLogin.getUsername(), timeValid))
+                .token(this.jwtProvider.generateToken(userLogin.getUsername(), timeValid))
                 .type("Bearer")
                 .authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .timeValid(timeValid)
                 .build();
+    }
+
+    @Override
+    public boolean tokenFilter(String token, HttpServletRequest req) {
+        String username = this.jwtProvider.getUsernameFromToken(token);
+        CustomUserDetail userDetail = new CustomUserDetail(this.findByUsername(username));
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                userDetail, null, userDetail.getAuthorities());
+        usernamePasswordAuthenticationToken
+                .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        return true;
     }
 }

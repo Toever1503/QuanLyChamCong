@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -35,6 +36,11 @@ public class OTServiceImp implements OTService {
     OT toEntity(OtModel model){
         if(model == null) throw new RuntimeException("Ot Model is null");
         return OT.builder()
+                .id(model.getId())
+                .time_start(model.getTime_start())
+                .time_end(model.getTime_end())
+                .multiply(model.getMultiply())
+                .status(model.getStatus())
                 .build();
     }
 
@@ -45,7 +51,10 @@ public class OTServiceImp implements OTService {
 
     @Override
     public OT add(OtModel model) {
-        OT entity = new OT();
+        OT entity = toEntity(model);
+        entity.setStaff(this.staffRepository.findById(model.getStaff_id()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        entity.setStatus(RequestStatusUtil.PENDING.name());
+        entity.setTime_created(Calendar.getInstance().getTime());
         return this.otRepository.save(entity);
     }
 
@@ -56,6 +65,7 @@ public class OTServiceImp implements OTService {
 
     @Override
     public OT update(OtModel model) {
+//        OT entity = toEntity(model);
         return null;
     }
 
@@ -85,5 +95,10 @@ public class OTServiceImp implements OTService {
         OT original = this.findById(id);
         original.setStatus(status.name());
         return this.otRepository.save(original);
+    }
+
+    @Override
+    public Page<OT> findAllRequestForManager(Long id, Pageable page) {
+        return this.otRepository.findAllRequestForManager(id, page);
     }
 }
