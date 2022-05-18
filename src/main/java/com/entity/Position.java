@@ -1,6 +1,7 @@
 package com.entity;
 
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long positionId;
+
 
     @Column(name = "position_name", unique = true)
     private String positionName;
