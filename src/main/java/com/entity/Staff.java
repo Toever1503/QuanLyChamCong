@@ -1,8 +1,16 @@
 package com.entity;
 
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name ="staffs")
 public class Staff {
@@ -35,4 +43,6 @@ public class Staff {
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Staff manager;
+    @OneToMany(mappedBy = "staff",targetEntity = OT.class)
+    private Set<OT> otSet;
 }
