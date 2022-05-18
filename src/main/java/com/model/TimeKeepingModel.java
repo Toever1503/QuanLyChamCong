@@ -17,8 +17,6 @@ public class TimeKeepingModel {
 
     private Long timeIn;
 
-    private Long timeOut;
-
     private String note;
 
     private RequestStatusUtil status;
@@ -30,7 +28,6 @@ public class TimeKeepingModel {
         return TimeKeeping.builder()
                 .id(model.getId())
                 .timeIn(model.getTimeIn())
-                .timeOut(model.getTimeOut())
                 .note(model.getNote())
                 .status(model.getStatus() == null ? RequestStatusUtil.PENDING.toString() : RequestStatusUtil.PENDING.toString())
                 .staff(model.getStaffModel() == null ? null : model.getStaffModel())

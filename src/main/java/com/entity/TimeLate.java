@@ -21,9 +21,6 @@ public class TimeLate {
     @Column(name = "timeIn")
     private Long timeIn;
 
-    @Column(name = "timeOut")
-    private Long timeOut;
-
     @Column(name ="note")
     private String note;
 

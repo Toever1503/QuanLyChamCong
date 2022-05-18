@@ -56,11 +56,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
 
     @Override
     public boolean deleteById(Long id) {
-        try {
             timekeepingRepository.deleteById(id);
-        }catch (Exception e){
-            return false;
-        }
         return true;
     }
 

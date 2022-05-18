@@ -22,20 +22,17 @@ public class TimelateModel {
 
     private Long timeIn;
 
-    private Long timeOut;
-
     private String note;
 
     private String status;
 
-    private Long staffModelId;
+    private Long staff;
 
     public static TimeLate modelToEntity(TimelateModel model){
         if(model == null) return null;
         return TimeLate.builder()
                 .id(model.getId())
                 .timeIn(model.getTimeIn())
-                .timeOut(model.getTimeOut())
                 .note(model.getNote())
                 .status(model.getStatus())
                 .build();

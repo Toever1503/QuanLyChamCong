@@ -16,22 +16,19 @@ public class TimeKeepingDto {
 
     private Long timeIn;
 
-    private Long timeOut;
-
     private String note;
 
     private String status;
 
-    private Staff staffDto;
+    private Staff staff;
 
     public static TimeKeepingDto entityToDto(TimeKeeping entity) {
         return TimeKeepingDto.builder()
                 .id(entity.getId())
                 .timeIn(entity.getTimeIn())
-                .timeOut(entity.getTimeOut())
                 .note(entity.getNote())
                 .status(entity.getStatus())
-                .staffDto(entity.getStaff())
+                .staff(entity.getStaff())
                 .build();
     }
 }

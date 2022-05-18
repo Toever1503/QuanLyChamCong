@@ -1,7 +1,6 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
-import com.entity.TimeKeeping;
 import com.entity.TimeLate;
 import com.model.TimelateModel;
 import com.repository.IStaffRepository;
@@ -41,7 +40,7 @@ public class TimeLateServiceImpl implements ITimeLateService {
     @Override
     public TimeLate add(TimelateModel model) {
         TimeLate timeLate = TimelateModel.modelToEntity(model);
-        timeLate.setStaff(staffRepository.findById(model.getStaffModelId()).get());
+        timeLate.setStaff(staffRepository.findById(model.getStaff()).get());
         return timeLateRepository.save(timeLate);
     }
 
