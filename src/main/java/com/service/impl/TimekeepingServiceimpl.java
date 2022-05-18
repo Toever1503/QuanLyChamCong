@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.entity.TimeKeeping;
+import com.model.RequestStatusUtil;
 import com.model.TimeKeepingModel;
 import com.repository.ITimekeepingRepository;
 import com.service.ITimeKeepingService;
@@ -70,5 +71,12 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     @Override
     public boolean deleteByIds(List<Long> id) {
         return false;
+    }
+
+    @Override
+    public TimeKeeping changeStatus(Long id, RequestStatusUtil status) {
+        TimeKeeping original = findById(id);
+        original.setStatus(status.toString());
+        return this.timekeepingRepository.save(original);
     }
 }

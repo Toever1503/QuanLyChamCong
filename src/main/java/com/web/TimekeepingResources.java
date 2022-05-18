@@ -1,25 +1,23 @@
-package com.controller;
+package com.web;
 
 import com.dto.ResponseDto;
 import com.dto.TimeKeepingDto;
 import com.entity.TimeKeeping;
-import com.model.RequestUtil;
+import com.model.RequestStatusUtil;
 import com.model.TimeKeepingModel;
-import com.service.impl.TimekeepingServiceimpl;
+import com.service.ITimeKeepingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/timekeeping")
-public class TimekeepingController {
-    private final TimekeepingServiceimpl timekeepingService;
+public class TimekeepingResources {
+    private final ITimeKeepingService timekeepingService;
 
-    public TimekeepingController(TimekeepingServiceimpl timekeepingService) {
+    public TimekeepingResources(ITimeKeepingService timekeepingService) {
         this.timekeepingService = timekeepingService;
     }
 
@@ -55,25 +53,8 @@ public class TimekeepingController {
     // management approve request timeKeeping
     @Transactional
     @PatchMapping("/{id}")
-    public Object updateTimeKeeping(@PathVariable("id") Long id, @RequestParam("status") String status) {
-        TimeKeeping timeKeeping = timekeepingService.findById(id);
-        TimeKeepingModel setTimekeepingStatus = new TimeKeepingModel();
-
-        if (status.equals("approved")) {
-            setTimekeepingStatus.setStatus(RequestUtil.APPROVED);
-        }else if (status.equals("rejected")) {
-            setTimekeepingStatus.setStatus(RequestUtil.REJECTED);
-        }
-        TimeKeepingModel timeKeepingModel = TimeKeepingModel.builder()
-                .id(id)
-                .timeIn(timeKeeping.getTimeIn())
-                .timeOut(timeKeeping.getTimeOut())
-                .status(setTimekeepingStatus.getStatus())
-                .build();
-
-        TimeKeeping timeKeepingResult =  timekeepingService.update(timeKeepingModel);
-        TimeKeepingDto timeKeepingDto = TimeKeepingDto.entityToDto(timeKeepingResult);
-        return ResponseDto.of(timeKeepingDto, "Update timekeeping success");
+    public Object updateTimeKeeping(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(TimeKeepingDto.entityToDto(timekeepingService.changeStatus(id, status)), "Update timekeeping success");
     }
 
     @Transactional
@@ -81,7 +62,7 @@ public class TimekeepingController {
     public Object deleteTimeKeeping(@PathVariable("id") Long id, Pageable pageable) {
         if (timekeepingService.deleteById(id)) {
             return ResponseDto.of(timekeepingService.findAll(pageable).map(TimeKeepingDto::entityToDto), "Delete timekeeping success");
-        }else {
+        } else {
             return ResponseDto.of(null, "Delete timekeeping fail");
         }
 

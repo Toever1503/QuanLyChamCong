@@ -1,6 +1,6 @@
 package com.model;
 
-public enum RequestUtil {
+public enum RequestStatusUtil {
     PENDING,
     APPROVED,
     REJECTED

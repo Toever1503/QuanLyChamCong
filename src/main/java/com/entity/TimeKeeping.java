@@ -1,14 +1,11 @@
 package com.entity;
 
-import com.model.RequestUtil;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
