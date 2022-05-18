@@ -1,5 +1,6 @@
 package com.config;
 
+
 import com.config.jwt.JwtAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
 
 
     @Bean

@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "positions")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

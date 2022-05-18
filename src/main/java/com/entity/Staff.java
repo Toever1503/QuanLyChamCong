@@ -1,6 +1,7 @@
 package com.entity;
 
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +39,7 @@ public class Staff {
 
     @Column(name = "avatar")
     private String avatar;
+
 
 
     @Temporal(TemporalType.TIMESTAMP)
