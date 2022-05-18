@@ -110,10 +110,12 @@ public class StaffServiceImpl implements IStaffService {
     public JwtLoginResponse login(JwtUserLoginModel userLogin) {
         UserDetails userDetail = new CustomUserDetail(this.findByUsername(userLogin.getUsername()));
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail, userLogin.getPassword(), userDetail.getAuthorities()));
+        long timeValid = userLogin.isRemember() ? 86400 * 7 : 1800l;
         return JwtLoginResponse.builder()
-                .token(jwtProvider.generateToken(userLogin.getUsername(), userLogin.isRemember() ? 86400 * 7 : 0l))
+                .token(jwtProvider.generateToken(userLogin.getUsername(), timeValid))
                 .type("Bearer")
                 .authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .timeValid(timeValid)
                 .build();
     }
 }
