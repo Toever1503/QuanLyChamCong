@@ -45,8 +45,8 @@ public class TimeLateResources {
 
     // management approve request timeLater
     @Transactional
-    @PatchMapping("/{id}")
-    public Object updateTimeKeeping(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
+    @PatchMapping("change-status/{id}")
+    public Object changeStatus(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(TimeLateDto.entityToDto(timeLateService.changeStatus(id, status)), "Update timekeeping success");
     }
 

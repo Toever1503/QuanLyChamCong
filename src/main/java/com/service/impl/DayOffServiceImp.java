@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.entity.DayOff;
 import com.model.DayOffModel;
 import com.repository.IDayOffRepository;
@@ -23,7 +24,12 @@ public class DayOffServiceImp implements DayOffService {
 
     DayOff toEntity(DayOffModel model) {
         if (model == null) throw new RuntimeException("DayOffModel is null");
-        return DayOff.builder().id(model.getId()).time_start(model.getTime_start()).time_end(model.getTime_end()).status(model.getStatus()).build();
+        return DayOff.builder()
+                .id(model.getId())
+                .time_start(model.getTime_start())
+                .time_end(model.getTime_end())
+                .status(model.getStatus())
+                .build();
     }
 
     @Override
@@ -44,7 +50,7 @@ public class DayOffServiceImp implements DayOffService {
     @Override
     public DayOff add(DayOffModel model) {
         DayOff dayOff = this.toEntity(model);
-        dayOff.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        dayOff.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
         dayOff.setTime_created(Calendar.getInstance().getTime());
         dayOff.setStatus(RequestStatusUtil.PENDING.name());
         return this.dayOffRepository.save(dayOff);

@@ -10,5 +10,5 @@ public interface IPositionRepository extends JpaRepository<Position, Long> {
     Position findByPositionName(String name);
 
     @Query("select p from Position p where p.positionId > (select s.position.positionId from Staff s where s.staffId = ?1)")
-    List<Position> findAllPosition(Long staffId);
+    List<Position> findAllPositionAllowedByManager(Long staffId);
 }

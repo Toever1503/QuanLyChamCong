@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import com.Util.SecurityUtil;
 import com.entity.TimeKeeping;
 import com.Util.RequestStatusUtil;
 import com.model.TimeKeepingModel;
@@ -40,7 +41,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     @Override
     public TimeKeeping add(TimeKeepingModel model) {
         TimeKeeping timeKeeping = TimeKeepingModel.modelToEntity(model);
-        timeKeeping.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow((() -> new RuntimeException("Staff Not found"))));
+        timeKeeping.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
         return timekeepingRepository.save(timeKeeping);
     }
 
@@ -52,12 +53,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
 
     @Override
     public TimeKeeping update(TimeKeepingModel model) {
-        TimeKeeping timeKeeping = findById(model.getId());
-        timeKeeping.setId(model.getId());
-        timeKeeping.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow((() -> new RuntimeException("Staff Not found"))));
-        timeKeeping.setStatus(model.getStatus().toString());
-        timekeepingRepository.save(timeKeeping);
-        return timeKeeping;
+        return null;
     }
 
     @Override
