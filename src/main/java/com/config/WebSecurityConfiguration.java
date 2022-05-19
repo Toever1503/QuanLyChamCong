@@ -22,7 +22,12 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
-            new AntPathRequestMatcher("/api/staffs/login"));
+            new AntPathRequestMatcher("/api/staffs/login"),
+            new AntPathRequestMatcher("/swagger-resources/**"),
+            new AntPathRequestMatcher("/swagger-ui/**"),
+            new AntPathRequestMatcher("/v2/api-docs"),
+            new AntPathRequestMatcher("/webjars/**")
+    );
     private RequestMatcher PRIVATE_URLS = new NegatedRequestMatcher(PUBLIC_URLS);
 
     @Autowired
