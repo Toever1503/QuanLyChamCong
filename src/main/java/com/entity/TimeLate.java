@@ -1,6 +1,5 @@
 package com.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +12,8 @@ import javax.persistence.*;
 @Data
 @Builder
 @Entity
-@Table(name = "TimeKeeping")
-public class TimeKeeping {
+@Table(name = "TimeLate")
+public class TimeLate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,8 +27,7 @@ public class TimeKeeping {
     @Column(name = "status")
     private String status;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "staff_id")
     private Staff staff;
-
 }
