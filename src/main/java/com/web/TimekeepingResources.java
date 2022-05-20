@@ -36,6 +36,7 @@ public class TimekeepingResources {
 //        return ResponseDto.of(timekeepingDtos, "Get all Timekeepings");
 //    }
 
+    @Transactional
     @GetMapping("/{id}")
     public Object getTimekeepingById(@PathVariable("id") Long id) {
         return ResponseDto.of(timekeepingService.findById(id), "Get TimeKeeping by id");

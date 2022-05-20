@@ -29,6 +29,7 @@ public class TimeLateResources {
         return ResponseDto.of(timeLateDtos, "Get all TimeKeepings Page");
     }
 
+    @Transactional
     @GetMapping("/{id}")
     public Object getTimeLateById(@PathVariable("id") Long id) {
         return ResponseDto.of(timeLateService.findById(id), "Get TimeKeeping by id");
@@ -46,7 +47,7 @@ public class TimeLateResources {
 
     // management approve request timeLater
     @Transactional
-    @PatchMapping("change-status/{id}")
+    @PatchMapping("change-status")
     public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(timeLateService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
     }
