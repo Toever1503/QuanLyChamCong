@@ -27,7 +27,7 @@ public class DayOffResources {
     @Transactional
     @GetMapping
     public ResponseDto gettAll(Pageable page) {
-        return ResponseDto.of(this.dayOffService.findAll(page).map(DayOffDTO::toDto), "Get all dayoff");
+        return ResponseDto.of(this.dayOffService.findAll(page).map(DayOffDTO::toDto), "Get all request dayoff");
     }
 
     @Transactional
@@ -40,7 +40,7 @@ public class DayOffResources {
     @PostMapping
     public ResponseDto add(@RequestBody DayOffModel model) {
         model.setId(null);
-        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.add(model)), "Add dayoff");
+        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.add(model)), "Add request dayoff");
     }
 
     @Transactional
@@ -48,18 +48,24 @@ public class DayOffResources {
     public ResponseDto update(@PathVariable Long id, @RequestBody DayOffModel model, @RequestParam RequestStatusUtil status) {
         model.setId(id);
         model.setStatus(status.name());
-        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.update(model)), "update dayoff");
+        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.update(model)), "update request dayoff");
     }
 
     @Transactional
     @DeleteMapping("{id}")
     public ResponseDto deleteById(@PathVariable Long id) {
-        return ResponseDto.of(this.dayOffService.deleteById(id) == false ? null : true, "Delete dayoff with id: " + id);
+        return ResponseDto.of(this.dayOffService.deleteById(id) == false ? null : true, "Delete request dayoff with id: " + id);
     }
 
     @Transactional
     @PatchMapping("change-status")
-    public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
-        return ResponseDto.of(this.dayOffService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
+    public ResponseDto changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(this.dayOffService.changeStatus(ids, status) == true ? true : null, "Update request dayoff success");
+    }
+
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
+        return ResponseDto.of(this.dayOffService.getAllRequestsByDate(date, page).map(DayOffDTO::toDto), "Get all request dayoff by date: " + date);
     }
 }

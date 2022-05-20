@@ -147,7 +147,6 @@ public class StaffServiceImpl implements IStaffService {
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         return true;
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.web;
 
 import com.Util.RequestStatusUtil;
+import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.dto.ResponseDto;
 import com.entity.OtModel;
@@ -36,26 +37,32 @@ public class OtResources {
     @PostMapping
     public ResponseDto add(@RequestBody OtModel model) {
         model.setId(null);
-        return ResponseDto.of(OTDto.toDto(this.otService.add(model)), "Add ot");
+        return ResponseDto.of(OTDto.toDto(this.otService.add(model)), "Add request ot");
     }
 
     @Transactional
     @PutMapping("{id}")
     public ResponseDto update(@PathVariable Long id, @RequestBody OtModel model) {
         model.setId(id);
-        return ResponseDto.of(OTDto.toDto(this.otService.update(model)), "Add ot");
+        return ResponseDto.of(OTDto.toDto(this.otService.update(model)), "Add request ot");
     }
 
     @Transactional
     @DeleteMapping("{id}")
     public ResponseDto deleteById(@PathVariable Long id) {
-        return ResponseDto.of(this.otService.deleteById(id) == false ? null : true, "Delete staff with id: " + id);
+        return ResponseDto.of(this.otService.deleteById(id) == false ? null : true, "Delete request OT with id: " + id);
     }
 
     @Transactional
     @PatchMapping("change-status")
     public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
-        return ResponseDto.of(otService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
+        return ResponseDto.of(this.otService.changeStatus(ids, status) == true ? true : null, "Update OT success");
+    }
+
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page){
+        return ResponseDto.of(this.otService.getAllRequestsByDate(date, page).map(OTDto::toDto), "Get all request OT by date: " + date);
     }
 
 

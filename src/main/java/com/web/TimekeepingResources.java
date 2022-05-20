@@ -1,5 +1,6 @@
 package com.web;
 
+import com.dto.OTDto;
 import com.dto.ResponseDto;
 import com.dto.TimeKeepingDto;
 import com.entity.TimeKeeping;
@@ -67,6 +68,11 @@ public class TimekeepingResources {
         } else {
             return ResponseDto.of(null, "Delete timekeeping fail");
         }
+    }
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page){
+        return ResponseDto.of(this.timekeepingService.getAllRequestsByDate(date, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + date);
     }
 
 }
