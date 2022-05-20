@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("request-status")
 public class RequestStatusResources {
 
+
     @GetMapping
     public ResponseDto getAll() {
         return ResponseDto.of(RequestStatusUtil.values(), "Get Request Status");
