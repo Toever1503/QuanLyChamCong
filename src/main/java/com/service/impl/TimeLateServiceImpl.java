@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.entity.TimeLate;
 import com.model.TimelateModel;
 import com.repository.IStaffRepository;
@@ -40,7 +41,7 @@ public class TimeLateServiceImpl implements ITimeLateService {
     @Override
     public TimeLate add(TimelateModel model) {
         TimeLate timeLate = TimelateModel.modelToEntity(model);
-        timeLate.setStaff(staffRepository.findById(model.getStaff()).get());
+        timeLate.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
         return timeLateRepository.save(timeLate);
     }
 

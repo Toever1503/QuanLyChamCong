@@ -27,11 +27,12 @@ public class JwtFilter extends OncePerRequestFilter {
         } else {
             String token = null;
             token = req.getHeader("Authorization");
+            System.out.println("token: " + token);
             if (token == null)
                 // token not valid
-                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized! Token is invalid");
+                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized! Please login to use this feature!");
             else {
-                this.staffService.tokenFilter(token, req);
+                this.staffService.tokenFilter(token.substring(7), req);
                 filterChain.doFilter(req, res);
             }
         }

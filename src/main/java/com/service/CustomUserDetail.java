@@ -21,6 +21,10 @@ public class CustomUserDetail implements UserDetails {
         return List.of(new SimpleGrantedAuthority(this.staff.getPosition().getPositionName()));
     }
 
+    public Staff getStaff() {
+        return this.staff;
+    }
+
     @Override
     public String getPassword() {
         return this.staff.getPassword();

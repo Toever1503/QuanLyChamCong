@@ -52,15 +52,12 @@ public class JwtProvider implements Serializable {
     }
 
     public String generateToken(String username, long invalidTime) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("ISSUER", "animenews");
-        claims.put("SUBJECT", username);
-        return doGenerateToken(claims, invalidTime == 0 ? JWT_TOKEN_VALIDITY : invalidTime);
+        return doGenerateToken(username, invalidTime == 0 ? JWT_TOKEN_VALIDITY : invalidTime);
     }
 
-    private String doGenerateToken(Map<String, Object> claims, long timeAvail) {
+    private String doGenerateToken(String subject, long timeAvail) {
         return Jwts.builder()
-                .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + timeAvail * 1000))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();

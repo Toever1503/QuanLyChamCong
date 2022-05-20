@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.entity.OT;
 import com.entity.OtModel;
 import com.repository.IOTRepository;
@@ -50,7 +51,7 @@ public class OTServiceImp implements OTService {
     @Override
     public OT add(OtModel model) {
         OT entity = toEntity(model);
-        entity.setStaff(this.staffRepository.findById(model.getStaff_id()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        entity.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
         entity.setStatus(RequestStatusUtil.PENDING.name());
         entity.setTime_created(Calendar.getInstance().getTime());
         return this.otRepository.save(entity);

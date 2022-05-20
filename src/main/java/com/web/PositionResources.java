@@ -1,14 +1,12 @@
 package com.web;
 
+import com.Util.SecurityUtil;
 import com.dto.ResponseDto;
 import com.entity.Position;
 import com.repository.IPositionRepository;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -31,13 +29,8 @@ public class PositionResources {
 
     }
 
-    @GetMapping
-    public ResponseDto getAll(Pageable page) {
-        return ResponseDto.of(this.positionRepository.findAll(page), "get all positions");
-    }
-
     @GetMapping("allowed-position")
-    public ResponseDto getAll(@RequestParam Long id) {
-        return ResponseDto.of(this.positionRepository.findAllPosition(id), "get all positions");
+    public ResponseDto getAll() {
+        return ResponseDto.of(this.positionRepository.findAllPositionAllowedByManager(SecurityUtil.getCurrentUserId()), "get all positions");
     }
 }

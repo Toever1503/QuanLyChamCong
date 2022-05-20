@@ -52,8 +52,8 @@ public class TimekeepingResources {
 
     // management approve request timeKeeping
     @Transactional
-    @PatchMapping("/{id}")
-    public Object updateTimeKeeping(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
+    @PatchMapping("change-status/{id}")
+    public Object changeStatus(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(TimeKeepingDto.entityToDto(timekeepingService.changeStatus(id, status)), "Update timekeeping success");
     }
 

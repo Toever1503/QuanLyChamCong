@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import com.Util.SecurityUtil;
 import com.config.jwt.JwtLoginResponse;
 import com.config.jwt.JwtProvider;
 import com.config.jwt.JwtUserLoginModel;
@@ -55,7 +56,16 @@ public class StaffServiceImpl implements IStaffService {
 
     Staff toEntity(StaffModel model) {
         if (model == null) throw new RuntimeException("Staff model is null");
-        return Staff.builder().staffId(model.getStaffId()).staffName(model.getStaffName()).email(model.getEmail()).birthday(model.getBirthday()).salary(model.getSalary()).avatar(model.getAvatar()).position(this.positionRepository.findById(model.getPosition()).orElseThrow(() -> new RuntimeException("Position not found"))).manager(this.findById(model.getManager())).build();
+        return Staff.builder()
+                .staffId(model.getStaffId())
+                .staffName(model.getStaffName())
+                .email(model.getEmail())
+                .birthday(model.getBirthday())
+                .salary(model.getSalary())
+                .avatar(model.getAvatar())
+                .position(this.positionRepository.findById(model.getPosition()).orElseThrow(() -> new RuntimeException("Position not found")))
+                .manager(findById(SecurityUtil.getCurrentUserId()))
+                .build();
     }
 
 
@@ -66,7 +76,8 @@ public class StaffServiceImpl implements IStaffService {
 
     @Override
     public Page<Staff> findAll(Pageable page) {
-        return this.staffRepository.findAll(page);
+        if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.staffRepository.findAll(page);
+        return findStaffOfManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
 
     @Override
@@ -120,31 +131,20 @@ public class StaffServiceImpl implements IStaffService {
         UserDetails userDetail = new CustomUserDetail(this.findByUsername(userLogin.getUsername()));
         this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDetail, userLogin.getPassword(), userDetail.getAuthorities()));
         long timeValid = userLogin.isRemember() ? 86400 * 7 : 1800l;
-        return JwtLoginResponse.builder()
-                .token(this.jwtProvider.generateToken(userLogin.getUsername(), timeValid))
-                .type("Bearer")
-                .authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .timeValid(timeValid)
-                .build();
-    }
-
-    @Override
-    public List<Staff> findStaffAndTimekeep(Long id) {
-        return staffRepository.findStaffAndTimeKeep(id);
+        return JwtLoginResponse.builder().token(this.jwtProvider.generateToken(userDetail.getUsername(), timeValid)).type("Bearer").authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).timeValid(timeValid).build();
     }
 
     @Override
     public Page<Staff> findStaffOfManager(Long managerId, Pageable page) {
-        return staffRepository.findStaffPage(managerId, page);
+        return staffRepository.findAllStaffForManager(managerId, page);
     }
 
     public boolean tokenFilter(String token, HttpServletRequest req) {
         String username = this.jwtProvider.getUsernameFromToken(token);
+        System.out.println("username: " + username);
         CustomUserDetail userDetail = new CustomUserDetail(this.findByUsername(username));
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetail, null, userDetail.getAuthorities());
-        usernamePasswordAuthenticationToken
-                .setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetail, null, userDetail.getAuthorities());
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         return true;
 
