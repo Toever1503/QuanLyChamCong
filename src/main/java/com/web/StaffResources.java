@@ -23,6 +23,11 @@ public class StaffResources {
         return ResponseDto.of(staffService.findAll(page).map(StaffDto::toDto), "Get all staffs");
     }
 
+    @GetMapping("profile")
+    public ResponseDto getProfile(){
+        return ResponseDto.of(StaffDto.toDto(this.staffService.getProfile()), "Get profile");
+    }
+
     @PostMapping
     public ResponseDto add(@RequestBody StaffModel model) {
         model.setStaffId(null);

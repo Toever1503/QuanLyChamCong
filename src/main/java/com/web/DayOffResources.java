@@ -6,8 +6,11 @@ import com.dto.DayOffDTO;
 import com.dto.ResponseDto;
 import com.model.DayOffModel;
 import com.service.DayOffService;
+import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/day-offs")
@@ -18,6 +21,7 @@ public class DayOffResources {
     public DayOffResources(DayOffService dayOffService) {
         this.dayOffService = dayOffService;
     }
+
 
     @GetMapping
     public ResponseDto gettAll(Pageable page) {
@@ -48,7 +52,7 @@ public class DayOffResources {
     }
 
     @GetMapping("change-status/{id}")
-    public ResponseDto changeStatus(@PathVariable Long id, @RequestParam RequestStatusUtil status) {
-        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.changeStatus(id, status)), "Change status dayoff with id: " + id);
+    public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(this.dayOffService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
     }
 }

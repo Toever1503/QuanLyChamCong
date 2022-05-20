@@ -83,10 +83,13 @@ public class DayOffServiceImp implements DayOffService {
     }
 
     @Override
-    public DayOff changeStatus(Long id, RequestStatusUtil status) {
-        DayOff original = this.findById(id);
-        original.setStatus(status.name());
-        return this.dayOffRepository.save(original);
+    public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
+        ids.forEach(id -> {
+            DayOff original = this.findById(id);
+            original.setStatus(status.name());
+            this.dayOffRepository.save(original);
+        });
+        return true;
     }
 
     @Override

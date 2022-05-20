@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.dto.SalaryDto;
 import com.entity.DayOff;
 import com.entity.OT;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,7 @@ public class SalaryServiceImp implements ISalaryService {
     IOTRepository OTrepository;
     @Autowired
     IStaffRepository staffRepository;
+
     @Override
     public List<Salary> findAll() {
         return salaryRepository.findAll();
@@ -46,7 +49,7 @@ public class SalaryServiceImp implements ISalaryService {
     @Override
     public Salary findById(Long id) {
         if (salaryRepository.findById(id).isPresent())
-         return salaryRepository.findById(id).get();
+            return salaryRepository.findById(id).get();
         else
             return null;
     }
@@ -59,8 +62,8 @@ public class SalaryServiceImp implements ISalaryService {
     @Override
     public List<Salary> add(List<SalaryModel> model) {
         List<Salary> salaries = new ArrayList<>();
-        for (SalaryModel m: model
-             ) {
+        for (SalaryModel m : model
+        ) {
             salaries.add(salaryRepository.save(SalaryModel.toEntity(m)));
         }
         return salaries;
@@ -83,17 +86,16 @@ public class SalaryServiceImp implements ISalaryService {
     }
 
     @Override
-    public SalaryDto calculateSalary(Long client_id) {
-//        Salary salaryModel = salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId()==clie;
+    public Salary calculateSalary(Long client_id) {
         Salary salaryModel = new Salary();
-        if(salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId()==client_id).filter(salary -> salary.getMonth() == LocalDate.now().getMonthValue()).findAny().isPresent()){
-            salaryModel = salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId()==client_id).filter(salary -> salary.getMonth() == LocalDate.now().getMonthValue()).findAny().get();
+        if (salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId() == client_id).filter(salary -> salary.getMonth() == LocalDate.now().getMonthValue()).findAny().isPresent()) {
+            salaryModel = salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId() == client_id).filter(salary -> salary.getMonth() == LocalDate.now().getMonthValue()).findAny().get();
             salaryModel.setId(salaryModel.getId());
         }
         double total_price = 0D;
         double total_minus = 0D;
-        int total_ot= 0;
-        if(OTrepository.findById(client_id).isPresent()) {
+        int total_ot = 0;
+        if (OTrepository.findById(client_id).isPresent()) {
             List<OT> otList = OTrepository.findAll().stream().filter(ot -> ot.getStaff().getStaffId() == client_id).filter(ot -> ot.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList());
             for (OT o : otList
             ) {
@@ -101,15 +103,34 @@ public class SalaryServiceImp implements ISalaryService {
                 total_price += -(o.getMultiply() * Math.round((o.getTime_end() - o.getTime_start()) / 3600000));
             }
         }
-        salaryModel.setLate_day(timeLateRepository.findAll().stream().filter(timeLate -> timeLate.getStaff().getStaffId()== client_id).filter(timeLate -> timeLate.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
+        salaryModel.setLate_day(timeLateRepository.findAll().stream().filter(timeLate -> timeLate.getStaff().getStaffId() == client_id).filter(timeLate -> timeLate.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
         salaryModel.setOt_hour(total_ot);
-        salaryModel.setOff_day(dayOffRepository.findAll().stream().filter(dayOff -> dayOff.getStaff().getStaffId()== client_id).filter(dayOff -> dayOff.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
-        salaryModel.setWork_day(timekeepingRepository.findAll().stream().filter(timeKeeping -> timeKeeping.getStaff().getStaffId()==client_id).filter(timeKeeping -> timeKeeping.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
+        salaryModel.setOff_day(dayOffRepository.findAll().stream().filter(dayOff -> dayOff.getStaff().getStaffId() == client_id).filter(dayOff -> dayOff.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
+        salaryModel.setWork_day(timekeepingRepository.findAll().stream().filter(timeKeeping -> timeKeeping.getStaff().getStaffId() == client_id).filter(timeKeeping -> timeKeeping.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
         salaryModel.setMonth(LocalDate.now().getMonthValue());
-        salaryModel.setTotal_salary(staffRepository.findById(client_id).get().getSalary()* salaryModel.getWork_day() + total_minus + total_price);
-            salaryModel.setStaff(staffRepository.findById(client_id).get());
-            total_minus -= salaryModel.getOff_day()*staffRepository.findById(client_id).get().getSalary();
+        salaryModel.setTotal_salary(staffRepository.findById(client_id).get().getSalary() * salaryModel.getWork_day() + total_minus + total_price);
+        salaryModel.setStaff(staffRepository.findById(client_id).get());
+        total_minus -= salaryModel.getOff_day() * staffRepository.findById(client_id).get().getSalary();
 
-            return SalaryDto.toDto(salaryRepository.save(salaryModel));
+        return salaryRepository.save(salaryModel);
     }
+
+    @Override
+    public Page<Salary> calculateTotalSalaryForEmployee(Pageable page) {
+        List<Long> staffIds = new ArrayList<>();
+        this.staffRepository.findAllStaffForManager(SecurityUtil.getCurrentUserId(), page)
+                .forEach(staff -> {
+                    staffIds.add(staff.getStaffId());
+                    this.calculateSalary(staff.getStaffId());
+                });
+        int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        return this.salaryRepository.findAllByStaffStaffIdInAndMonth(staffIds, currentMonth, page);
+    }
+
+    @Override
+    public Salary getMySalaryByMonth(int month) {
+        Long staffId = SecurityUtil.getCurrentUserId();
+        return this.salaryRepository.findByStaffStaffIdAndMonth(staffId, month).orElse(this.calculateSalary(staffId));
+    }
+
 }

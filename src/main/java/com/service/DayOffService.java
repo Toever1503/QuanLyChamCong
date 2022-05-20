@@ -1,14 +1,15 @@
 package com.service;
 
 import com.Util.RequestStatusUtil;
-import com.dto.DayOffDTO;
 import com.entity.DayOff;
 import com.model.DayOffModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface DayOffService extends IBaseService<DayOff, DayOffModel, Long>{
-    DayOff changeStatus(Long id, RequestStatusUtil status);
+    boolean changeStatus(List<Long> ids, RequestStatusUtil status);
 
     Page<DayOff> findAllDayOffByEmployeeId(Long employeeId, Pageable page);
 

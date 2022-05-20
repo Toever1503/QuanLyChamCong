@@ -149,4 +149,9 @@ public class StaffServiceImpl implements IStaffService {
         return true;
 
     }
+
+    @Override
+    public Staff getProfile() {
+        return this.findById(SecurityUtil.getCurrentUserId());
+    }
 }

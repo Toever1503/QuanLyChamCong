@@ -74,9 +74,12 @@ public class TimeLateServiceImpl implements ITimeLateService {
     }
 
     @Override
-    public TimeLate changeStatus(Long id, RequestStatusUtil status) {
-        TimeLate original = findById(id);
-        original.setStatus(status.toString());
-        return this.timeLateRepository.save(original);
+    public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
+        ids.forEach(id -> {
+            TimeLate original = findById(id);
+            original.setStatus(status.toString());
+            this.timeLateRepository.save(original);
+        });
+        return true;
     }
 }

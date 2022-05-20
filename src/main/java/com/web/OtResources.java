@@ -8,6 +8,8 @@ import com.service.OTService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("api/ots")
 @RestController
 public class OtResources {
@@ -45,8 +47,9 @@ public class OtResources {
     }
 
     @GetMapping("change-status/{id}")
-    public ResponseDto changeStatus(@PathVariable Long id, @RequestParam RequestStatusUtil status) {
-        return ResponseDto.of(OTDto.toDto(this.otService.changeStatus(id, status)), "Change status ot with id: " + id);
+    @PatchMapping("change-status/{id}")
+    public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(otService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
     }
 
 

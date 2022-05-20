@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/timeLate")
@@ -46,8 +47,8 @@ public class TimeLateResources {
     // management approve request timeLater
     @Transactional
     @PatchMapping("change-status/{id}")
-    public Object changeStatus(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
-        return ResponseDto.of(TimeLateDto.entityToDto(timeLateService.changeStatus(id, status)), "Update timekeeping success");
+    public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(timeLateService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
     }
 
     @Transactional

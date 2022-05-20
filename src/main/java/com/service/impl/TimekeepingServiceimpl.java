@@ -58,7 +58,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
 
     @Override
     public boolean deleteById(Long id) {
-            timekeepingRepository.deleteById(id);
+        timekeepingRepository.deleteById(id);
         return true;
     }
 
@@ -68,9 +68,12 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     }
 
     @Override
-    public TimeKeeping changeStatus(Long id, RequestStatusUtil status) {
-        TimeKeeping original = findById(id);
-        original.setStatus(status.toString());
-        return this.timekeepingRepository.save(original);
+    public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
+        ids.forEach(id -> {
+            TimeKeeping original = findById(id);
+            original.setStatus(status.toString());
+            this.timekeepingRepository.save(original);
+        });
+        return true;
     }
 }

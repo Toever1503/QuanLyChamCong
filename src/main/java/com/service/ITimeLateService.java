@@ -5,6 +5,8 @@ import com.entity.TimeKeeping;
 import com.entity.TimeLate;
 import com.model.TimelateModel;
 
+import java.util.List;
+
 public interface ITimeLateService extends IBaseService<TimeLate, TimelateModel, Long> {
-    TimeLate changeStatus(Long id, RequestStatusUtil status);
+    boolean changeStatus(List<Long> ids, RequestStatusUtil status);
 }

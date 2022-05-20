@@ -32,8 +32,8 @@ public class OTServiceImp implements OTService {
         return otRepository.findAll(page);
     }
 
-    OT toEntity(OtModel model){
-        if(model == null) throw new RuntimeException("Ot Model is null");
+    OT toEntity(OtModel model) {
+        if (model == null) throw new RuntimeException("Ot Model is null");
         return OT.builder()
                 .id(model.getId())
                 .time_start(model.getTime_start())
@@ -90,10 +90,13 @@ public class OTServiceImp implements OTService {
     }
 
     @Override
-    public OT changeStatus(Long id, RequestStatusUtil status) {
-        OT original = this.findById(id);
-        original.setStatus(status.name());
-        return this.otRepository.save(original);
+    public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
+        ids.forEach(id -> {
+            OT original = this.findById(id);
+            original.setStatus(status.name());
+            this.otRepository.save(original);
+        });
+        return true;
     }
 
     @Override

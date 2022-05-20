@@ -1,6 +1,7 @@
 package com.model;
 
 import com.entity.DayOff;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 @Getter
@@ -9,11 +10,22 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DayOffModel {
+    @ApiModelProperty(notes = "id uuid separate each day off", dataType = "Long", example = "1")
     private Long id;
+
+    @ApiModelProperty(notes = "id của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
     private Long staff;
+
+    @ApiModelProperty(notes = "thời gian bắt đầu xin nghỉ, tính bằng miliseconds", dataType = "date", example = "191481941298410")
     private Long time_start;
+
+    @ApiModelProperty(notes = "thời gian kết thúc xin nghỉ, tính bằng miliseconds", dataType = "date", example = "191481941298410")
     private Long time_end;
+
+    @ApiModelProperty(notes = "Thời gian tạo của dayoff, tự động tạo", dataType = "date", example = "1")
     private java.util.Date time_created;
+
+    @ApiModelProperty(notes = "trạng thái của phiếu(PENDING, REJECTED, APPROVED)", dataType = "enum", example = "1")
     private String status;
 
     public static DayOffModel toDto(DayOff entity) {
