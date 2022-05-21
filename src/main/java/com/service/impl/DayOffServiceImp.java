@@ -2,7 +2,9 @@ package com.service.impl;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
+import com.Util.TimeUtil;
 import com.entity.DayOff;
+import com.entity.Position;
 import com.model.DayOffModel;
 import com.repository.IDayOffRepository;
 import com.repository.IStaffRepository;
@@ -34,12 +36,13 @@ public class DayOffServiceImp implements DayOffService {
 
     @Override
     public List<DayOff> findAll() {
-        return dayOffRepository.findAll();
+        return null;
     }
 
     @Override
     public Page<DayOff> findAll(Pageable page) {
-        return dayOffRepository.findAll(page);
+        if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.dayOffRepository.findAll(page);
+        return findAllRequestForManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
 
     @Override
@@ -93,12 +96,18 @@ public class DayOffServiceImp implements DayOffService {
     }
 
     @Override
-    public Page<DayOff> findAllDayOffByEmployeeId(Long employeeId, Pageable page) {
-        return this.dayOffRepository.findAllByStaffStaffId(employeeId, page);
+    public Page<DayOff> findAllRequestForManager(Long id, Pageable page) {
+        return this.dayOffRepository.findAllRequestForManager(id, page);
     }
 
     @Override
-    public Page<DayOff> findAllRequestForManager(Long id, Pageable page) {
-        return this.dayOffRepository.findAllRequestForManager(id, page);
+    public Page<DayOff> getAllRequestsByDate(long date, Pageable page) {
+        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
+        return this.dayOffRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    }
+
+    @Override
+    public Page<DayOff> findAllMyRequests(Pageable page) {
+        return this.dayOffRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
     }
 }

@@ -2,6 +2,8 @@ package com.service.impl;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
+import com.Util.TimeUtil;
+import com.entity.Position;
 import com.entity.TimeLate;
 import com.model.TimelateModel;
 import com.repository.IStaffRepository;
@@ -30,7 +32,8 @@ public class TimeLateServiceImpl implements ITimeLateService {
 
     @Override
     public Page<TimeLate> findAll(Pageable page) {
-        return timeLateRepository.findAll(page);
+        if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.timeLateRepository.findAll(page);
+        return this.timeLateRepository.findStaffOfManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
 
     @Override
@@ -81,5 +84,16 @@ public class TimeLateServiceImpl implements ITimeLateService {
             this.timeLateRepository.save(original);
         });
         return true;
+    }
+
+    @Override
+    public Page<TimeLate> getAllRequestsByDate(long date, Pageable page) {
+        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
+        return this.timeLateRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    }
+
+    @Override
+    public Page<TimeLate> findAllMyRequests(Pageable page) {
+        return this.timeLateRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
     }
 }

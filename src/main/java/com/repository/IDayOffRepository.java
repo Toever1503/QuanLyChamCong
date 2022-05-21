@@ -11,4 +11,7 @@ public interface IDayOffRepository extends JpaRepository<DayOff, Long> {
 
     @Query("select d from DayOff d join Staff s on s.staffId = d.staff.staffId where s.manager.staffId = ?1")
     Page<DayOff> findAllRequestForManager(Long managerId, Pageable page);
+
+    @Query("select d from DayOff d join Staff s on s.staffId = d.staff.staffId where s.manager.staffId = ?1 and d.time_start >= ?2 and d.time_start <= ?3")
+    Page<DayOff> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 }

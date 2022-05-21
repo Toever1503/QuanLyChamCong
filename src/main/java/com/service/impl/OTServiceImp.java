@@ -2,8 +2,10 @@ package com.service.impl;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
+import com.Util.TimeUtil;
 import com.entity.OT;
 import com.entity.OtModel;
+import com.entity.Position;
 import com.repository.IOTRepository;
 import com.repository.IStaffRepository;
 import com.service.OTService;
@@ -24,12 +26,13 @@ public class OTServiceImp implements OTService {
 
     @Override
     public List<OT> findAll() {
-        return otRepository.findAll();
+        return null;
     }
 
     @Override
     public Page<OT> findAll(Pageable page) {
-        return otRepository.findAll(page);
+        if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.otRepository.findAll(page);
+        return findAllRequestForManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
 
     OT toEntity(OtModel model) {
@@ -102,5 +105,16 @@ public class OTServiceImp implements OTService {
     @Override
     public Page<OT> findAllRequestForManager(Long id, Pageable page) {
         return this.otRepository.findAllRequestForManager(id, page);
+    }
+
+    @Override
+    public Page<OT> getAllRequestsByDate(long date, Pageable page) {
+        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
+        return this.otRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    }
+
+    @Override
+    public Page<OT> findAllMyRequests(Pageable page) {
+        return this.otRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
     }
 }

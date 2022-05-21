@@ -30,16 +30,16 @@ public class TimekeepingResources {
     }
 
 
-//    @GetMapping()
-//    public Object getAllTimeKeepings(){
-//        List<TimeKeepingDto> timekeepingDtos = timekeepingService.findAll().stream().map(TimeKeepingDto::entityToDto).collect(Collectors.toList());
-//        return ResponseDto.of(timekeepingDtos, "Get all Timekeepings");
-//    }
+    @Transactional
+    @GetMapping("my-request")
+    public Object getAllRequests(Pageable page) {
+        return ResponseDto.of(timekeepingService.findAllMyRequests(page).map(TimeKeepingDto::entityToDto), "Get all my Timekeepings");
+    }
 
     @Transactional
     @GetMapping("/{id}")
     public Object getTimekeepingById(@PathVariable("id") Long id) {
-        return ResponseDto.of(timekeepingService.findById(id), "Get TimeKeeping by id");
+        return ResponseDto.of(TimeKeepingDto.entityToDto(timekeepingService.findById(id)), "Get TimeKeeping by id");
     }
 
     // staff send request timeKeeping
@@ -67,6 +67,12 @@ public class TimekeepingResources {
         } else {
             return ResponseDto.of(null, "Delete timekeeping fail");
         }
+    }
+
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
+        return ResponseDto.of(this.timekeepingService.getAllRequestsByDate(date, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + date);
     }
 
 }

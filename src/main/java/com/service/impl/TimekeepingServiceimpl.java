@@ -1,6 +1,8 @@
 package com.service.impl;
 
 import com.Util.SecurityUtil;
+import com.Util.TimeUtil;
+import com.entity.Position;
 import com.entity.TimeKeeping;
 import com.Util.RequestStatusUtil;
 import com.model.TimeKeepingModel;
@@ -25,12 +27,13 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
 
     @Override
     public List<TimeKeeping> findAll() {
-        return timekeepingRepository.findAll();
+        return null;
     }
 
     @Override
     public Page<TimeKeeping> findAll(Pageable page) {
-        return timekeepingRepository.findAll(page);
+        if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.timekeepingRepository.findAll(page);
+        return this.timekeepingRepository.findAllRequestForManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
 
     @Override
@@ -75,5 +78,16 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
             this.timekeepingRepository.save(original);
         });
         return true;
+    }
+
+    @Override
+    public Page<TimeKeeping> getAllRequestsByDate(long date, Pageable page) {
+        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
+        return this.timekeepingRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(),times[0], times[1], page);
+    }
+
+    @Override
+    public Page<TimeKeeping> findAllMyRequests(Pageable page) {
+        return this.timekeepingRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
     }
 }

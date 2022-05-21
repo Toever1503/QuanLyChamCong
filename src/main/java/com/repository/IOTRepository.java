@@ -12,4 +12,9 @@ public interface IOTRepository extends JpaRepository<OT, Long> {
 
     @Query("select o from OT o join Staff s on s.staffId = o.staff.staffId where s.manager.staffId = ?1")
     Page<OT> findAllRequestForManager(Long managerId, Pageable page);
+
+    Page<OT> findAllByStaffStaffId(Long staffId, Pageable page);
+
+    @Query("select o from OT o join Staff s on s.staffId = o.staff.staffId where s.manager.staffId = ?1 and o.time_start >= ?2 and o.time_start <= ?3")
+    Page<OT> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 }
