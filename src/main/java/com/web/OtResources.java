@@ -39,6 +39,7 @@ public class OtResources {
         return ResponseDto.of(this.otService.findAllMyRequests(page).map(OTDto::toDto), "Get all ots of manager: ");
     }
 
+
     @Transactional
     @PostMapping
     public ResponseDto add(@RequestBody OtModel model) {
