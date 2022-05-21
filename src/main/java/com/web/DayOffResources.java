@@ -23,7 +23,6 @@ public class DayOffResources {
         this.dayOffService = dayOffService;
     }
 
-
     @Transactional
     @GetMapping
     public ResponseDto gettAll(Pageable page) {

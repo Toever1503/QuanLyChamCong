@@ -29,18 +29,18 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     public List<TimeKeeping> findAll() {
         return null;
     }
-
+    // Tìm tất cả yêu cầu chấm công từ nhân viên theo quản lí // Find all attendant request by staff by manager
     @Override
     public Page<TimeKeeping> findAll(Pageable page) {
         if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.timekeepingRepository.findAll(page);
         return this.timekeepingRepository.findAllRequestForManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
-
+    // Tìm yêu cầu chấm công theo id // Find attendant request by id
     @Override
     public TimeKeeping findById(Long id) {
         return timekeepingRepository.findById(id).orElseThrow((() -> new RuntimeException("Not found")));
     }
-
+    // Gửi yêu cầu chấm công // Send attendant request
     @Override
     public TimeKeeping add(TimeKeepingModel model) {
         TimeKeeping timeKeeping = TimeKeepingModel.modelToEntity(model);
@@ -58,7 +58,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     public TimeKeeping update(TimeKeepingModel model) {
         return null;
     }
-
+    // Xóa yêu cầu chấm công theo id // Delete attendant request by id
     @Override
     public boolean deleteById(Long id) {
         timekeepingRepository.deleteById(id);
@@ -69,7 +69,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     public boolean deleteByIds(List<Long> id) {
         return false;
     }
-
+    //Phê duyệt, từ chối yêu cầu chấm công // Approve or Reject attendant request
     @Override
     public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
         ids.forEach(id -> {
@@ -79,13 +79,13 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
         });
         return true;
     }
-
+    // Tìm tất cả yêu cầu chấm công từ nhân viên theo quản lí và thời gian // Find all attendant request by staff by manager and time
     @Override
     public Page<TimeKeeping> getAllRequestsByDate(long date, Pageable page) {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.timekeepingRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(),times[0], times[1], page);
     }
-
+    // Tìm tất cả yêu cầu chấm công của tôi // Find all my attendant request
     @Override
     public Page<TimeKeeping> findAllMyRequests(Pageable page) {
         return this.timekeepingRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);

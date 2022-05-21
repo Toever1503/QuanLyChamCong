@@ -19,6 +19,7 @@ public class SalaryModel {
     private int month;
     private double total_salary;
 
+    //Model to Entity
     public static Salary toEntity(SalaryModel salary)
     {
         if(salary == null){

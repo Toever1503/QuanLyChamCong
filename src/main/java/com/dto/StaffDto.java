@@ -24,6 +24,7 @@ public class StaffDto {
     private String manager;
     private String position;
 
+    //Entity to Dto
     public static StaffDto toDto(Staff entity) {
         if (entity == null) throw new RuntimeException("Entity is null");
         return StaffDto.builder()

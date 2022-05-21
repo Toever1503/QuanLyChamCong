@@ -22,6 +22,7 @@ public class SalaryDto {
     private int month;
     private double total_salary;
 
+    //Entity to dto
     public static SalaryDto toDto(Salary salary) {
         if (salary == null) throw new RuntimeException("Entity Salary is null");
         Double income = salary.getStaff().getSalary();

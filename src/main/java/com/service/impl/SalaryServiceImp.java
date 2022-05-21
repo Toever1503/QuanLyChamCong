@@ -84,7 +84,7 @@ public class SalaryServiceImp implements ISalaryService {
     public boolean deleteByIds(List<Long> id) {
         return false;
     }
-
+    //Tính toán bảng lương theo tháng của nhân viên // Calculate salary by month of employee
     @Override
     public Salary calculateSalary(Long client_id) {
         Salary salaryModel = new Salary();
@@ -114,7 +114,7 @@ public class SalaryServiceImp implements ISalaryService {
 
         return salaryRepository.save(salaryModel);
     }
-
+    //Tính tổng lương quản lí cần trả // Calculate total amount of manager's employee salary
     @Override
     public Page<Salary> calculateTotalSalaryForEmployee(Pageable page) {
         List<Long> staffIds = new ArrayList<>();
@@ -126,7 +126,7 @@ public class SalaryServiceImp implements ISalaryService {
         int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         return this.salaryRepository.findAllByStaffStaffIdInAndMonth(staffIds, currentMonth, page);
     }
-
+    //Tính lương nhân viên theo tháng // Calculate employee salary by month
     @Override
     public Salary getMySalaryByMonth(int month) {
         Long staffId = SecurityUtil.getCurrentUserId();

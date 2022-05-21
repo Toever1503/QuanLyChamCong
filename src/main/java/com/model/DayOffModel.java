@@ -28,6 +28,7 @@ public class DayOffModel {
     @ApiModelProperty(notes = "trạng thái của phiếu(PENDING, REJECTED, APPROVED)", dataType = "enum", example = "1")
     private String status;
 
+    //Entity to DTO
     public static DayOffModel toDto(DayOff entity) {
         if (entity == null) throw new RuntimeException("Entity is null");
         return DayOffModel.builder()

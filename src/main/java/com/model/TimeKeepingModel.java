@@ -23,6 +23,7 @@ public class TimeKeepingModel {
 
     private Long staff;
 
+    //Model to entity
     public static TimeKeeping modelToEntity(TimeKeepingModel model){
         if (model == null) return null;
         return TimeKeeping.builder()

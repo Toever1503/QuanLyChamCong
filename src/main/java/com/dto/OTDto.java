@@ -23,6 +23,7 @@ public class OTDto {
     private Float multiply;
     private String status;
 
+    //Entity to dto
     public static OTDto toDto(OT entity) {
         if (entity == null) throw new RuntimeException("OT Entity is null");
         return OTDto.builder()

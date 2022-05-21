@@ -16,6 +16,7 @@ public class DayOffDTO {
     private java.util.Date time_created;
     private String status;
 
+    //Entity to DTO
     public static DayOffDTO toDto(DayOff entity) {
         if (entity == null) throw new RuntimeException("Entity is null");
         return DayOffDTO.builder()

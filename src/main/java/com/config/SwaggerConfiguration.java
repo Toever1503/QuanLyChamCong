@@ -16,17 +16,20 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @Configuration
 //@EnableSwagger2
 public class SwaggerConfiguration {
+
+    //Xây dựng các đối tượng API và thông tin của API//Build API object to show on SWAGGER DASHBOARD
     @Bean
     public Docket postsApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("public-api")
                 .apiInfo(apiInfo()).select().paths(postPaths()).build();
     }
-
+    //Xây dựng lọc đường dẫn cho các api// Api path filter
     private Predicate<String> postPaths() {
         return regex("/api/.*");
     }
 
+    //Xây dựng thông tin cho api// API INFORMATION IMPLEMENT
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder().title("cy API")
                 .description("cy API reference for developers")

@@ -11,11 +11,13 @@ import org.springframework.stereotype.Repository;
 public interface ITimeLateRepository extends JpaRepository<TimeLate, Long> {
     Page<TimeLate> findAll(Pageable pageable);
 
+    //Tìm tất cả yêu cầu làm muộn từ nhân viên theo quản lí// Find all late work request by manager id
     @Query("select t from TimeLate t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1 and t.timeIn >= ?2 and t.timeIn <= ?3")
     Page<TimeLate> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 
     Page<TimeLate> findAllByStaffStaffId(Long staffId, Pageable page);
 
+    //Tìm tất cả yêu cầu làm muộn từ nhân viên theo quản lí vả thời gian// Find all late work request by manager id and time
     @Query("select t from TimeLate t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1")
     Page<TimeLate> findStaffOfManager(Long staffId, Pageable page);
 }

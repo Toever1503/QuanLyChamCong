@@ -10,12 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class BeanConfiguration {
 
+    //Mã hóa mật khẩu//Encrypt password
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 
+    //Fix CORS
     @Bean
     public WebMvcConfigurer configurer() {
         return new WebMvcConfigurer() {
