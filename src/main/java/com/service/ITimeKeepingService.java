@@ -13,4 +13,6 @@ public interface ITimeKeepingService extends IBaseService<TimeKeeping, TimeKeepi
     boolean changeStatus(List<Long> ids, RequestStatusUtil status);
 
     Page<TimeKeeping> getAllRequestsByDate(long date, Pageable page);
+
+    Page<TimeKeeping>findAllMyRequests(Pageable page);
 }

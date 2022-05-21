@@ -96,11 +96,6 @@ public class DayOffServiceImp implements DayOffService {
     }
 
     @Override
-    public Page<DayOff> findAllDayOffByEmployeeId(Long employeeId, Pageable page) {
-        return this.dayOffRepository.findAllByStaffStaffId(employeeId, page);
-    }
-
-    @Override
     public Page<DayOff> findAllRequestForManager(Long id, Pageable page) {
         return this.dayOffRepository.findAllRequestForManager(id, page);
     }
@@ -109,5 +104,10 @@ public class DayOffServiceImp implements DayOffService {
     public Page<DayOff> getAllRequestsByDate(long date, Pageable page) {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.dayOffRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    }
+
+    @Override
+    public Page<DayOff> findAllMyRequests(Pageable page) {
+        return this.dayOffRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
     }
 }

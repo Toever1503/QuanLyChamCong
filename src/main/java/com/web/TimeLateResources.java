@@ -29,6 +29,11 @@ public class TimeLateResources {
         Page<TimeLateDto> timeLateDtos = timeLateService.findAll(page).map(TimeLateDto::entityToDto);
         return ResponseDto.of(timeLateDtos, "Get all TimeKeepings Page");
     }
+    @Transactional
+    @GetMapping("my-request")
+    public ResponseDto getAllRequests( Pageable page) {
+        return ResponseDto.of(this.timeLateService.findAllMyRequests(page).map(TimeLateDto::entityToDto), "Get all request time late by staff");
+    }
 
     @Transactional
     @GetMapping("/{id}")

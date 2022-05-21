@@ -16,4 +16,6 @@ public interface OTService extends IBaseService<OT, OtModel, Long> {
     Page<OT> findAllRequestForManager(Long id, Pageable page);
 
     Page<OT>  getAllRequestsByDate(long date, Pageable page);
+
+    Page<OT> findAllMyRequests(Pageable page);
 }

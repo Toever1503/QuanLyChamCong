@@ -91,4 +91,9 @@ public class TimeLateServiceImpl implements ITimeLateService {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.timeLateRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
     }
+
+    @Override
+    public Page<TimeLate> findAllMyRequests(Pageable page) {
+        return this.timeLateRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    }
 }

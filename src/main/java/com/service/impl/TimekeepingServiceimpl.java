@@ -85,4 +85,9 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.timekeepingRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(),times[0], times[1], page);
     }
+
+    @Override
+    public Page<TimeKeeping> findAllMyRequests(Pageable page) {
+        return this.timekeepingRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    }
 }

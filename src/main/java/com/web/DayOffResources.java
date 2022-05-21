@@ -31,9 +31,15 @@ public class DayOffResources {
     }
 
     @Transactional
-    @GetMapping("get-request-by-manager/{id}")
-    public ResponseDto getRequestByManager(@PathVariable Long id, Pageable page) {
-        return ResponseDto.of(this.dayOffService.findAllRequestForManager(id, page).map(DayOffDTO::toDto), "Get all request dayoff of manager: " + id);
+    @GetMapping("{id}")
+    public ResponseDto getById(@PathVariable Long id) {
+        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.findById(id)), "Get request dayoff by id: " + id);
+    }
+
+    @Transactional
+    @GetMapping("my-request")
+    public ResponseDto getAllMyRequest(Pageable page) {
+        return ResponseDto.of(this.dayOffService.findAllMyRequests(page).map(DayOffDTO::toDto), "Get all my request dayoff: ");
     }
 
     @Transactional

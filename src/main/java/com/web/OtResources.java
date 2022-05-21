@@ -28,9 +28,15 @@ public class OtResources {
     }
 
     @Transactional
-    @GetMapping("get-request-by-manager/{id}")
-    public ResponseDto getRequestByManager(@PathVariable Long id, Pageable page) {
-        return ResponseDto.of(this.otService.findAllRequestForManager(id, page).map(OTDto::toDto), "Get all ots of manager: " + id);
+    @GetMapping("{id}")
+    public ResponseDto getById(@PathVariable Long id) {
+        return ResponseDto.of(OTDto.toDto(this.otService.findById(id)), "Get request OT by id: " + id);
+    }
+
+    @Transactional
+    @GetMapping("my-request")
+    public ResponseDto getAllMyRequest(Pageable page) {
+        return ResponseDto.of(this.otService.findAllMyRequests(page).map(OTDto::toDto), "Get all ots of manager: ");
     }
 
     @Transactional
@@ -61,7 +67,7 @@ public class OtResources {
 
     @Transactional
     @GetMapping("get-request-by-date/{date}")
-    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page){
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
         return ResponseDto.of(this.otService.getAllRequestsByDate(date, page).map(OTDto::toDto), "Get all request OT by date: " + date);
     }
 

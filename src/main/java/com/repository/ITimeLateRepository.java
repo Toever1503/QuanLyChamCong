@@ -14,6 +14,8 @@ public interface ITimeLateRepository extends JpaRepository<TimeLate, Long> {
     @Query("select t from TimeLate t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1 and t.timeIn >= ?2 and t.timeIn <= ?3")
     Page<TimeLate> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 
+    Page<TimeLate> findAllByStaffStaffId(Long staffId, Pageable page);
+
     @Query("select t from TimeLate t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1")
     Page<TimeLate> findStaffOfManager(Long staffId, Pageable page);
 }

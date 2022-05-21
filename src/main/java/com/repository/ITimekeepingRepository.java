@@ -15,6 +15,8 @@ public interface ITimekeepingRepository extends JpaRepository<TimeKeeping, Long>
     @Query("select t from TimeKeeping t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1")
     Page<TimeKeeping> findAllRequestForManager(Long managerId, Pageable page);
 
+    Page<TimeKeeping> findAllByStaffStaffId(Long staffId, Pageable page);
+
     @Query("select t from TimeKeeping t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1 and t.timeIn >= ?2 and t.timeIn <= ?3")
     Page<TimeKeeping> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 }

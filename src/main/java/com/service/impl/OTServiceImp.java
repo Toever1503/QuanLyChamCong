@@ -112,4 +112,9 @@ public class OTServiceImp implements OTService {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.otRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
     }
+
+    @Override
+    public Page<OT> findAllMyRequests(Pageable page) {
+        return this.otRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    }
 }
