@@ -17,6 +17,7 @@ public class SalaryDto {
     private Long id;
     private int late_day;
     private int off_day;
+
     private Map<String, Object> work_day;
     private Map<String, Object> ot_hour;
     private int month;

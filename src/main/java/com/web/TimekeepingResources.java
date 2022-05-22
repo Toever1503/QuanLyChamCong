@@ -54,6 +54,7 @@ public class TimekeepingResources {
 
     // management approve request timeKeeping
     @Transactional
+
     @PatchMapping("change-status")
     public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(timekeepingService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");

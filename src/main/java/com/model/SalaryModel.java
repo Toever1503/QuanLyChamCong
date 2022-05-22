@@ -1,11 +1,13 @@
 package com.model;
 
+import com.dto.SalaryDto;
 import com.entity.Salary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class SalaryModel {
     private int ot_hour;
     private int month;
     private double total_salary;
+
 
     //Model to Entity
     public static Salary toEntity(SalaryModel salary)

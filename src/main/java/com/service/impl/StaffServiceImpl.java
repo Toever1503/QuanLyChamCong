@@ -134,6 +134,7 @@ public class StaffServiceImpl implements IStaffService {
         long timeValid = userLogin.isRemember() ? 86400 * 7 : 1800l;
         return JwtLoginResponse.builder().token(this.jwtProvider.generateToken(userDetail.getUsername(), timeValid)).type("Bearer").authorities(userDetail.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())).timeValid(timeValid).build();
     }
+
     // Tìm tất cả nhân viên của quản lí // Find all staffs of manager
     @Override
     public Page<Staff> findStaffOfManager(Long managerId, Pageable page) {

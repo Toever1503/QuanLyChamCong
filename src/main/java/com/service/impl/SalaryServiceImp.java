@@ -49,7 +49,7 @@ public class SalaryServiceImp implements ISalaryService {
     @Override
     public Salary findById(Long id) {
         if (salaryRepository.findById(id).isPresent())
-            return salaryRepository.findById(id).get();
+         return salaryRepository.findById(id).get();
         else
             return null;
     }
@@ -61,12 +61,7 @@ public class SalaryServiceImp implements ISalaryService {
 
     @Override
     public List<Salary> add(List<SalaryModel> model) {
-        List<Salary> salaries = new ArrayList<>();
-        for (SalaryModel m : model
-        ) {
-            salaries.add(salaryRepository.save(SalaryModel.toEntity(m)));
-        }
-        return salaries;
+        return null;
     }
 
     @Override
@@ -84,6 +79,7 @@ public class SalaryServiceImp implements ISalaryService {
     public boolean deleteByIds(List<Long> id) {
         return false;
     }
+
     //Tính toán bảng lương theo tháng của nhân viên // Calculate salary by month of employee
     @Override
     public Salary calculateSalary(Long client_id) {
@@ -94,6 +90,7 @@ public class SalaryServiceImp implements ISalaryService {
         }
         double total_price = 0D;
         double total_minus = 0D;
+
         int total_ot = 0;
         if (OTrepository.findById(client_id).isPresent()) {
             List<OT> otList = OTrepository.findAll().stream().filter(ot -> ot.getStaff().getStaffId() == client_id).filter(ot -> ot.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList());
@@ -103,6 +100,7 @@ public class SalaryServiceImp implements ISalaryService {
                 total_price += -(o.getMultiply() * Math.round((o.getTime_end() - o.getTime_start()) / 3600000));
             }
         }
+
         salaryModel.setLate_day(timeLateRepository.findAll().stream().filter(timeLate -> timeLate.getStaff().getStaffId() == client_id).filter(timeLate -> timeLate.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
         salaryModel.setOt_hour(total_ot);
         salaryModel.setOff_day(dayOffRepository.findAll().stream().filter(dayOff -> dayOff.getStaff().getStaffId() == client_id).filter(dayOff -> dayOff.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());

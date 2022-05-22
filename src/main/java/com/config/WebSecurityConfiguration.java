@@ -21,6 +21,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+
     //Các URL có thể tự do truy cập //Public URLs that don't need to be authorized
     private final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/api/staffs/login"),
@@ -47,7 +48,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().requestMatchers(PUBLIC_URLS);
     }
-    //Cung cấp token cho người dùng // Provides Token on authenticated
+
+    // custom việc authenticate // Provides Token on authenticated
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(new JwtAuthenticationProvider());
@@ -64,7 +66,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .requestMatchers(PRIVATE_URLS).authenticated()
                 .and().exceptionHandling().authenticationEntryPoint((req, res, auth) -> {
-                    res.sendError(401, "You have to login");
+                    res.sendError(401, "You must have to login");
                 });
         http.addFilterBefore(new JwtFilter(staffService), org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
     }
