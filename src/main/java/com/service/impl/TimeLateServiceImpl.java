@@ -29,17 +29,20 @@ public class TimeLateServiceImpl implements ITimeLateService {
     public List<TimeLate> findAll() {
         return null;
     }
+
     //Tìm tất cả yêu cầu chấm công từ nhân viên theo quản lí// Find all late work request by manager id
     @Override
     public Page<TimeLate> findAll(Pageable page) {
         if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.timeLateRepository.findAll(page);
         return this.timeLateRepository.findStaffOfManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
+
     // Tìm yêu cầu làm muộn theo id // Find late work request by id
     @Override
     public TimeLate findById(Long id) {
         return timeLateRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
+
     // Gửi yêu cầu làm muộn // Send late work request
     @Override
     public TimeLate add(TimelateModel model) {
@@ -52,6 +55,7 @@ public class TimeLateServiceImpl implements ITimeLateService {
     public List<TimeLate> add(List<TimelateModel> model) {
         return null;
     }
+
     // Cập nhật yêu cầu làm muộn // Update late work request
     @Override
     public TimeLate update(TimelateModel model) {
@@ -61,6 +65,7 @@ public class TimeLateServiceImpl implements ITimeLateService {
         timeLateRepository.save(timeLate);
         return timeLate;
     }
+
     // Xóa yêu cầu làm muộn theo id // Delete late work request by id
     @Override
     public boolean deleteById(Long id) {
@@ -75,6 +80,7 @@ public class TimeLateServiceImpl implements ITimeLateService {
     public boolean deleteByIds(List<Long> id) {
         return false;
     }
+
     // Phê duyệt hoặc từ chối yêu cầu làm muộn // Approve of Reject late work request
     @Override
     public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
@@ -85,15 +91,17 @@ public class TimeLateServiceImpl implements ITimeLateService {
         });
         return true;
     }
+
     //Tìm tất cả yêu cầu làm muộn từ nhân viên theo quản lí và thời gian// Find all late work request by manager id and time
     @Override
     public Page<TimeLate> getAllRequestsByDate(long date, Pageable page) {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.timeLateRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
     }
+
     // Tìm tất cả yêu cầu làm muộn của tôi // Find all my late work requests
     @Override
-    public Page<TimeLate> findAllMyRequests(Pageable page) {
-        return this.timeLateRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    public Page<TimeLate> findAllStaffRequests(Long staffId, Pageable page) {
+        return this.timeLateRepository.findAllByStaffStaffId(staffId, page);
     }
 }

@@ -1,14 +1,18 @@
 package com.web;
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.dto.ResponseDto;
+import com.dto.TimeLateDto;
 import com.entity.OtModel;
+import com.entity.Position;
 import com.service.OTService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -33,10 +37,17 @@ public class OtResources {
         return ResponseDto.of(OTDto.toDto(this.otService.findById(id)), "Get request OT by id: " + id);
     }
 
+    @RolesAllowed(Position.ADMINISTRATOR)
+    @Transactional
+    @GetMapping("all-request/{staffId}")
+    public ResponseDto getAllRequestsByStaffId(@PathVariable long staffId, Pageable page) {
+        return ResponseDto.of(otService.findAllStaffRequests(staffId, page).map(OTDto::toDto), "Get all request time ots by staff");
+    }
+
     @Transactional
     @GetMapping("my-request")
     public ResponseDto getAllMyRequest(Pageable page) {
-        return ResponseDto.of(this.otService.findAllMyRequests(page).map(OTDto::toDto), "Get all ots of manager: ");
+        return ResponseDto.of(this.otService.findAllStaffRequests(SecurityUtil.getCurrentUserId(), page).map(OTDto::toDto), "Get all ots of manager: ");
     }
 
 

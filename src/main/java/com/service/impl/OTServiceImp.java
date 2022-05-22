@@ -114,7 +114,7 @@ public class OTServiceImp implements OTService {
     }
     //Tìm tất cả yêu cầu làm thêm giờ của tôi // Find all my overtime requests
     @Override
-    public Page<OT> findAllMyRequests(Pageable page) {
-        return this.otRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    public Page<OT> findAllStaffRequests(Long staffId, Pageable page) {
+        return this.otRepository.findAllByStaffStaffId(staffId, page);
     }
 }

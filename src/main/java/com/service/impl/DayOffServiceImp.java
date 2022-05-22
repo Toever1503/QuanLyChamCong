@@ -47,11 +47,13 @@ public class DayOffServiceImp implements DayOffService {
         if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.dayOffRepository.findAll(page);
         return findAllRequestForManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
+
     //Tìm kiếm yêu cầu nghỉ từ nhân viên theo mã // Find day off request from employee by  id
     @Override
     public DayOff findById(Long id) {
         return dayOffRepository.findById(id).orElseThrow(() -> new RuntimeException("DayOff Not found"));
     }
+
     //Yêu cầu ngày nghỉ từ nhân viên // Add day off request
     @Override
     public DayOff add(DayOffModel model) {
@@ -81,12 +83,14 @@ public class DayOffServiceImp implements DayOffService {
         dayOffRepository.deleteById(id);
         return true;
     }
+
     //Xóa nhiều yêu cầu nghỉ// Delete day off requests
     @Override
     public boolean deleteByIds(List<Long> ids) {
         ids.forEach(this::deleteById);
         return true;
     }
+
     //Phê duyệt, hủy bỏ yêu cầu nghỉ // Approve Reject day off request
     @Override
     public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
@@ -103,15 +107,17 @@ public class DayOffServiceImp implements DayOffService {
     public Page<DayOff> findAllRequestForManager(Long id, Pageable page) {
         return this.dayOffRepository.findAllRequestForManager(id, page);
     }
+
     //Tìm kiếm tất cả yêu cầu nghỉ từ nhân viên theo quản lí, thời gian // Find all day off request from employee by manager id and time
     @Override
     public Page<DayOff> getAllRequestsByDate(long date, Pageable page) {
         Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
         return this.dayOffRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
     }
+
     //Tìm tất cả yêu cầu nghỉ của bản thân // Find all day off request of current user
     @Override
-    public Page<DayOff> findAllMyRequests(Pageable page) {
-        return this.dayOffRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    public Page<DayOff> findAllStaffRequests(Long staffId, Pageable page) {
+        return this.dayOffRepository.findAllByStaffStaffId(staffId, page);
     }
 }

@@ -14,5 +14,5 @@ public interface ITimeKeepingService extends IBaseService<TimeKeeping, TimeKeepi
 
     Page<TimeKeeping> getAllRequestsByDate(long date, Pageable page);
 
-    Page<TimeKeeping>findAllMyRequests(Pageable page);
+    Page<TimeKeeping>findAllStaffRequests(Long staffId,Pageable page);
 }

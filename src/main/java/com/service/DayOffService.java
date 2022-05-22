@@ -16,5 +16,5 @@ public interface DayOffService extends IBaseService<DayOff, DayOffModel, Long>{
 
     Page<DayOff> getAllRequestsByDate(long date,  Pageable page);
 
-    Page<DayOff> findAllMyRequests(Pageable page);
+    Page<DayOff> findAllStaffRequests(Long staffId, Pageable page);
 }

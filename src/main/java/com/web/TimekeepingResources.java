@@ -1,7 +1,9 @@
 package com.web;
 
+import com.Util.SecurityUtil;
 import com.dto.ResponseDto;
 import com.dto.TimeKeepingDto;
+import com.entity.Position;
 import com.entity.TimeKeeping;
 import com.Util.RequestStatusUtil;
 import com.model.TimeKeepingModel;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -29,11 +32,17 @@ public class TimekeepingResources {
         return ResponseDto.of(timeKeepingDtos, "Get all TimeKeepings Page");
     }
 
+    @RolesAllowed(Position.ADMINISTRATOR)
+    @Transactional
+    @GetMapping("all-request/{staffId}")
+    public ResponseDto getAllStaffRequests(@PathVariable long staffId, Pageable page) {
+        return ResponseDto.of(timekeepingService.findAllStaffRequests(staffId, page).map(TimeKeepingDto::entityToDto), "Get all staff Timekeepings");
+    }
 
     @Transactional
     @GetMapping("my-request")
     public Object getAllRequests(Pageable page) {
-        return ResponseDto.of(timekeepingService.findAllMyRequests(page).map(TimeKeepingDto::entityToDto), "Get all my Timekeepings");
+        return ResponseDto.of(timekeepingService.findAllStaffRequests(SecurityUtil.getCurrentUserId(), page).map(TimeKeepingDto::entityToDto), "Get all my Timekeepings");
     }
 
     @Transactional

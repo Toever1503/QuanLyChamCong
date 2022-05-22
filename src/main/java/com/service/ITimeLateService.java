@@ -15,5 +15,5 @@ public interface ITimeLateService extends IBaseService<TimeLate, TimelateModel, 
 
     Page<TimeLate> getAllRequestsByDate(long date, Pageable page);
 
-    Page<TimeLate> findAllMyRequests(Pageable page);
+    Page<TimeLate> findAllStaffRequests(Long staffId, Pageable page);
 }

@@ -2,14 +2,17 @@ package com.web;
 
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.dto.DayOffDTO;
+import com.dto.OTDto;
 import com.dto.ResponseDto;
+import com.entity.Position;
 import com.model.DayOffModel;
 import com.service.DayOffService;
-import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -35,10 +38,17 @@ public class DayOffResources {
         return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.findById(id)), "Get request dayoff by id: " + id);
     }
 
+    @RolesAllowed(Position.ADMINISTRATOR)
+    @Transactional
+    @GetMapping("all-request/{staffId}")
+    public ResponseDto getAllRequestsByStaffId(@PathVariable long staffId, Pageable page) {
+        return ResponseDto.of(this.dayOffService.findAllStaffRequests(staffId, page).map(DayOffDTO::toDto), "Get all request time dayoff by staff");
+    }
+
     @Transactional
     @GetMapping("my-request")
     public ResponseDto getAllMyRequest(Pageable page) {
-        return ResponseDto.of(this.dayOffService.findAllMyRequests(page).map(DayOffDTO::toDto), "Get all my request dayoff: ");
+        return ResponseDto.of(this.dayOffService.findAllStaffRequests(SecurityUtil.getCurrentUserId(), page).map(DayOffDTO::toDto), "Get all my request dayoff: ");
     }
 
 

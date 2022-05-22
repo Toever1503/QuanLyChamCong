@@ -1,16 +1,21 @@
 package com.web;
 
 import com.Util.RequestStatusUtil;
+import com.Util.SecurityUtil;
 import com.dto.ResponseDto;
 import com.dto.TimeKeepingDto;
 import com.dto.TimeLateDto;
+import com.entity.Position;
 import com.entity.TimeLate;
 import com.model.TimelateModel;
 import com.service.ITimeLateService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -29,10 +34,18 @@ public class TimeLateResources {
         Page<TimeLateDto> timeLateDtos = timeLateService.findAll(page).map(TimeLateDto::entityToDto);
         return ResponseDto.of(timeLateDtos, "Get all TimeKeepings Page");
     }
+
+    @RolesAllowed(Position.ADMINISTRATOR)
+    @Transactional
+    @GetMapping("all-request/{staffId}")
+    public ResponseDto getAllRequestsByStaffId(@PathVariable long staffId, Pageable page) {
+        return ResponseDto.of(timeLateService.findAllStaffRequests(staffId, page).map(TimeLateDto::entityToDto), "Get all request time late by staff");
+    }
+
     @Transactional
     @GetMapping("my-request")
-    public ResponseDto getAllRequests( Pageable page) {
-        return ResponseDto.of(this.timeLateService.findAllMyRequests(page).map(TimeLateDto::entityToDto), "Get all request time late by staff");
+    public ResponseDto getAllRequests(Pageable page) {
+        return ResponseDto.of(this.timeLateService.findAllStaffRequests(SecurityUtil.getCurrentUserId(), page).map(TimeLateDto::entityToDto), "Get all request time late by staff");
     }
 
     @Transactional

@@ -88,7 +88,7 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     }
     // Tìm tất cả yêu cầu chấm công của tôi // Find all my attendant request
     @Override
-    public Page<TimeKeeping> findAllMyRequests(Pageable page) {
-        return this.timekeepingRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
+    public Page<TimeKeeping> findAllStaffRequests(Long staffId,Pageable page) {
+        return this.timekeepingRepository.findAllByStaffStaffId(staffId, page);
     }
 }
