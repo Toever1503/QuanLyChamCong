@@ -6,9 +6,7 @@ import com.entity.Staff;
 import com.model.StaffModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 public interface IStaffService extends IBaseService<Staff, StaffModel, Long> {
@@ -18,4 +16,5 @@ public interface IStaffService extends IBaseService<Staff, StaffModel, Long> {
 
     boolean tokenFilter(String token, HttpServletRequest req);
 
+    Staff getProfile();
 }

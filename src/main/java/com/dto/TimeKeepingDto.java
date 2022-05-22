@@ -22,6 +22,7 @@ public class TimeKeepingDto {
 
     private Staff staff;
 
+    //Entity to DTO
     public static TimeKeepingDto entityToDto(TimeKeeping entity) {
         return TimeKeepingDto.builder()
                 .id(entity.getId())

@@ -2,8 +2,10 @@ package com.service.impl;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
+import com.Util.TimeUtil;
 import com.entity.OT;
 import com.entity.OtModel;
+import com.entity.Position;
 import com.repository.IOTRepository;
 import com.repository.IStaffRepository;
 import com.service.OTService;
@@ -24,16 +26,17 @@ public class OTServiceImp implements OTService {
 
     @Override
     public List<OT> findAll() {
-        return otRepository.findAll();
+        return null;
     }
-
+    //Tìm kiếm tất cả yêu cầu làm thêm giờ từ nhân viên theo quản lí // Find all overtime request from employee by manager id
     @Override
     public Page<OT> findAll(Pageable page) {
-        return otRepository.findAll(page);
+        if (SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.otRepository.findAll(page);
+        return findAllRequestForManager(SecurityUtil.getCurrentUser().getStaff().getStaffId(), page);
     }
-
-    OT toEntity(OtModel model){
-        if(model == null) throw new RuntimeException("Ot Model is null");
+    //Model to Entity
+    OT toEntity(OtModel model) {
+        if (model == null) throw new RuntimeException("Ot Model is null");
         return OT.builder()
                 .id(model.getId())
                 .time_start(model.getTime_start())
@@ -42,12 +45,12 @@ public class OTServiceImp implements OTService {
                 .status(model.getStatus())
                 .build();
     }
-
+    //Tìm yêu cầu làm thêm giờ theo id// Find overtime request by id
     @Override
     public OT findById(Long id) {
         return otRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
-
+    //Yêu cầu làm thêm giờ // Send overtime request
     @Override
     public OT add(OtModel model) {
         OT entity = toEntity(model);
@@ -67,7 +70,7 @@ public class OTServiceImp implements OTService {
 //        OT entity = toEntity(model);
         return null;
     }
-
+    //Xóa yêu cầu làm thêm giờ theo id // Delete overtime request by id
     @Override
     public boolean deleteById(Long id) {
         if (otRepository.findById(id).isPresent()) {
@@ -76,7 +79,7 @@ public class OTServiceImp implements OTService {
         } else
             return false;
     }
-
+    //Xóa nhiều yêu cầu làm thêm giờ theo id // Delete overtime requests by ids
     @Override
     public boolean deleteByIds(List<Long> id) {
         for (Long i : id
@@ -88,16 +91,30 @@ public class OTServiceImp implements OTService {
         }
         return true;
     }
-
+    //Phê duyệt, bác bỏ yêu cầu làm thêm giờ theo id// Approve Reject overtime requests by id
     @Override
-    public OT changeStatus(Long id, RequestStatusUtil status) {
-        OT original = this.findById(id);
-        original.setStatus(status.name());
-        return this.otRepository.save(original);
+    public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
+        ids.forEach(id -> {
+            OT original = this.findById(id);
+            original.setStatus(status.name());
+            this.otRepository.save(original);
+        });
+        return true;
     }
-
+    //Tìm tất cả yêu cầu làm thêm giờ theo quản lí // Find all overtime requests by manager
     @Override
     public Page<OT> findAllRequestForManager(Long id, Pageable page) {
         return this.otRepository.findAllRequestForManager(id, page);
+    }
+    //Tìm tất cả yêu cầu làm thêm giờ theo quản lí và thời gian // Find all overtime requests by manager and time
+    @Override
+    public Page<OT> getAllRequestsByDate(long date, Pageable page) {
+        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
+        return this.otRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    }
+    //Tìm tất cả yêu cầu làm thêm giờ của tôi // Find all my overtime requests
+    @Override
+    public Page<OT> findAllMyRequests(Pageable page) {
+        return this.otRepository.findAllByStaffStaffId(SecurityUtil.getCurrentUserId(), page);
     }
 }

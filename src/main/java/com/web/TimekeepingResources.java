@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/timekeeping")
@@ -29,15 +30,16 @@ public class TimekeepingResources {
     }
 
 
-//    @GetMapping()
-//    public Object getAllTimeKeepings(){
-//        List<TimeKeepingDto> timekeepingDtos = timekeepingService.findAll().stream().map(TimeKeepingDto::entityToDto).collect(Collectors.toList());
-//        return ResponseDto.of(timekeepingDtos, "Get all Timekeepings");
-//    }
+    @Transactional
+    @GetMapping("my-request")
+    public Object getAllRequests(Pageable page) {
+        return ResponseDto.of(timekeepingService.findAllMyRequests(page).map(TimeKeepingDto::entityToDto), "Get all my Timekeepings");
+    }
 
+    @Transactional
     @GetMapping("/{id}")
     public Object getTimekeepingById(@PathVariable("id") Long id) {
-        return ResponseDto.of(timekeepingService.findById(id), "Get TimeKeeping by id");
+        return ResponseDto.of(TimeKeepingDto.entityToDto(timekeepingService.findById(id)), "Get TimeKeeping by id");
     }
 
     // staff send request timeKeeping
@@ -52,9 +54,10 @@ public class TimekeepingResources {
 
     // management approve request timeKeeping
     @Transactional
-    @PatchMapping("change-status/{id}")
-    public Object changeStatus(@PathVariable("id") Long id, @RequestParam("status") RequestStatusUtil status) {
-        return ResponseDto.of(TimeKeepingDto.entityToDto(timekeepingService.changeStatus(id, status)), "Update timekeeping success");
+
+    @PatchMapping("change-status")
+    public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(timekeepingService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
     }
 
     @Transactional
@@ -65,6 +68,12 @@ public class TimekeepingResources {
         } else {
             return ResponseDto.of(null, "Delete timekeeping fail");
         }
+    }
+
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
+        return ResponseDto.of(this.timekeepingService.getAllRequestsByDate(date, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + date);
     }
 
 }

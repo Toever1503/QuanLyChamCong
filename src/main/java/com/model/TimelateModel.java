@@ -28,6 +28,7 @@ public class TimelateModel {
 
     private Long staff;
 
+    //Model to entity
     public static TimeLate modelToEntity(TimelateModel model){
         if(model == null) return null;
         return TimeLate.builder()

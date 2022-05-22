@@ -22,6 +22,7 @@ public class TimeLateDto {
 
     private Long staff;
 
+    //Entity to Dto
     public static TimeLateDto entityToDto(TimeLate timeLate) {
         return TimeLateDto.builder()
                 .id(timeLate.getId())

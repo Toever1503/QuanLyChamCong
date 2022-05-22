@@ -1,12 +1,16 @@
 package com.web;
 
 import com.Util.RequestStatusUtil;
+import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.dto.ResponseDto;
 import com.entity.OtModel;
 import com.service.OTService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @RequestMapping("api/ots")
 @RestController
@@ -17,36 +21,55 @@ public class OtResources {
         this.otService = otService;
     }
 
+    @Transactional
     @GetMapping
     public ResponseDto gettAll(Pageable page) {
         return ResponseDto.of(this.otService.findAll(page).map(OTDto::toDto), "Get all ots");
     }
 
-    @GetMapping("get-request-by-manager/{id}")
-    public ResponseDto getRequestByManager(@PathVariable Long id, Pageable page) {
-        return ResponseDto.of(this.otService.findAllRequestForManager(id, page).map(OTDto::toDto), "Get all ots of manager: " + id);
+    @Transactional
+    @GetMapping("{id}")
+    public ResponseDto getById(@PathVariable Long id) {
+        return ResponseDto.of(OTDto.toDto(this.otService.findById(id)), "Get request OT by id: " + id);
     }
 
+    @Transactional
+    @GetMapping("my-request")
+    public ResponseDto getAllMyRequest(Pageable page) {
+        return ResponseDto.of(this.otService.findAllMyRequests(page).map(OTDto::toDto), "Get all ots of manager: ");
+    }
+
+
+    @Transactional
     @PostMapping
     public ResponseDto add(@RequestBody OtModel model) {
         model.setId(null);
-        return ResponseDto.of(OTDto.toDto(this.otService.add(model)), "Add ot");
+        return ResponseDto.of(OTDto.toDto(this.otService.add(model)), "Add request ot");
     }
 
-    @PatchMapping("{id}")
+    @Transactional
+    @PutMapping("{id}")
     public ResponseDto update(@PathVariable Long id, @RequestBody OtModel model) {
         model.setId(id);
-        return ResponseDto.of(OTDto.toDto(this.otService.update(model)), "Add ot");
+        return ResponseDto.of(OTDto.toDto(this.otService.update(model)), "Add request ot");
     }
 
+    @Transactional
     @DeleteMapping("{id}")
     public ResponseDto deleteById(@PathVariable Long id) {
-        return ResponseDto.of(this.otService.deleteById(id) == false ? null : true, "Delete staff with id: " + id);
+        return ResponseDto.of(this.otService.deleteById(id) == false ? null : true, "Delete request OT with id: " + id);
     }
 
-    @GetMapping("change-status/{id}")
-    public ResponseDto changeStatus(@PathVariable Long id, @RequestParam RequestStatusUtil status) {
-        return ResponseDto.of(OTDto.toDto(this.otService.changeStatus(id, status)), "Change status ot with id: " + id);
+    @Transactional
+    @PatchMapping("change-status")
+    public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
+        return ResponseDto.of(this.otService.changeStatus(ids, status) == true ? true : null, "Update OT success");
+    }
+
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
+        return ResponseDto.of(this.otService.getAllRequestsByDate(date, page).map(OTDto::toDto), "Get all request OT by date: " + date);
     }
 
 

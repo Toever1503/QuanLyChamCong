@@ -1,9 +1,16 @@
 package com.service;
 
-import com.dto.SalaryDto;
+
 import com.entity.Salary;
 import com.model.SalaryModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ISalaryService extends IBaseService<Salary, SalaryModel,Long>{
-    SalaryDto calculateSalary(Long client_id);
+    Salary calculateSalary(Long client_id);
+
+    Page<Salary> calculateTotalSalaryForEmployee(Pageable page);
+
+    Salary getMySalaryByMonth(int month);
+
 }
