@@ -63,7 +63,6 @@ public class TimekeepingResources {
 
     // management approve request timeKeeping
     @Transactional
-
     @PatchMapping("change-status")
     public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(timekeepingService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
@@ -80,9 +79,22 @@ public class TimekeepingResources {
     }
 
     @Transactional
+    @DeleteMapping("deletes")
+    public Object deleteListTimekeeping(@RequestBody List<Long> ids, Pageable pageable){
+        if(timekeepingService.deleteByIds(ids)){
+            return ResponseDto.of(this.timekeepingService.findAll(pageable).map(TimeKeepingDto::entityToDto), "Delete timekeepings success");
+        }else{
+            return ResponseDto.of(null, "Delete list timekeeping fail");
+        }
+    }
+
+    @Transactional
+    @GetMapping("get-request-by-date/{date}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
+        return ResponseDto.of(this.timekeepingService.getAllRequestsByDate(date, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + date);
+
     @GetMapping("get-request-by-date/{timein}/{timeout}")
     public ResponseDto getAllRequestsByDate(@PathVariable long timein,@PathVariable long timeout, Pageable page) {
         return ResponseDto.of(this.timekeepingService.getAllRequestsByTime(timein, timeout, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + timein + timeout);
     }
-
 }
