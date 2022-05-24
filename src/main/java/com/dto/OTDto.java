@@ -17,6 +17,7 @@ import java.sql.Date;
 public class OTDto {
     private Long id;
     private String staff;
+    private String note;
     private Long time_start;
     private Long time_end;
     private java.util.Date time_created;
@@ -29,6 +30,7 @@ public class OTDto {
         return OTDto.builder()
                 .id(entity.getId())
                 .staff(entity.getStaff().getStaffName())
+                .note(entity.getNote())
                 .time_start(entity.getTime_start())
                 .time_end(entity.getTime_end())
                 .time_created(entity.getTime_created())

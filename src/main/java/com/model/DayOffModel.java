@@ -16,6 +16,9 @@ public class DayOffModel {
     @ApiModelProperty(notes = "id của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
     private Long staff;
 
+    @ApiModelProperty(notes = "note của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
+    private String note;
+
     @ApiModelProperty(notes = "thời gian bắt đầu xin nghỉ, tính bằng miliseconds", dataType = "date", example = "191481941298410")
     private Long time_start;
 
@@ -33,6 +36,7 @@ public class DayOffModel {
         if (entity == null) throw new RuntimeException("Entity is null");
         return DayOffModel.builder()
                 .id(entity.getId())
+                .note(entity.getNote())
                 .time_start(entity.getTime_start())
                 .time_end(entity.getTime_end())
                 .time_created(entity.getTime_created())

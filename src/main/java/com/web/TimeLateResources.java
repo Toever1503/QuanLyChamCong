@@ -11,6 +11,7 @@ import com.model.TimelateModel;
 import com.service.ITimeLateService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,12 @@ public class TimeLateResources {
         this.timeLateService = timeLateService;
     }
 
+    @ApiOperation(
+            nickname = "getAllTimeLate",
+            consumes = "application/json",
+            value = "Get all timeLate",
+            protocols = "http,https",
+            notes = "1.1 notes")
     @Transactional
     @GetMapping
     public Object getAllTimeLatePage(Pageable page) {

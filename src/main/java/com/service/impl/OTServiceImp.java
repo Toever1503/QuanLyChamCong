@@ -39,6 +39,7 @@ public class OTServiceImp implements OTService {
         if (model == null) throw new RuntimeException("Ot Model is null");
         return OT.builder()
                 .id(model.getId())
+                .note(model.getNote())
                 .time_start(model.getTime_start())
                 .time_end(model.getTime_end())
                 .multiply(model.getMultiply())
