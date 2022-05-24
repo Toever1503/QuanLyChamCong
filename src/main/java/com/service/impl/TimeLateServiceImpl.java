@@ -69,16 +69,14 @@ public class TimeLateServiceImpl implements ITimeLateService {
     // Xóa yêu cầu làm muộn theo id // Delete late work request by id
     @Override
     public boolean deleteById(Long id) {
-        if (timeLateRepository.findById(id).isPresent()) {
-            timeLateRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        this.timeLateRepository.deleteById(id);
+        return true;
     }
 
     @Override
-    public boolean deleteByIds(List<Long> id) {
-        return false;
+    public boolean deleteByIds(List<Long> ids) {
+        ids.forEach(this::deleteById);
+        return true;
     }
 
     // Phê duyệt hoặc từ chối yêu cầu làm muộn // Approve of Reject late work request

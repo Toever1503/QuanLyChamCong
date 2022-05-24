@@ -25,10 +25,5 @@ public interface ITimekeepingRepository extends JpaRepository<TimeKeeping, Long>
     @Query("select t from TimeKeeping t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1 and t.timeIn >= ?2 and t.timeIn <= ?3")
     Page<TimeKeeping> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 
-    // ham nay tao ra de xoa nhieu request nhung chua duoc su dung
-    @Modifying
-    @Query("delete from TimeKeeping t where t.id in ?1")
-    void deleteByIdIn(List<Long> ids);
-
     void deleteAllByStaffStaffId(Long staff_id);
 }

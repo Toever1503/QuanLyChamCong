@@ -74,6 +74,12 @@ public class DayOffResources {
     }
 
     @Transactional
+    @DeleteMapping("deletes")
+    public Object deleteDayOffs(@RequestBody List<Long> ids){
+        return ResponseDto.of(this.dayOffService.deleteByIds(ids) ? true : null, "Delete dayOffs success");
+    }
+
+    @Transactional
     @PatchMapping("change-status")
     public ResponseDto changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(this.dayOffService.changeStatus(ids, status) == true ? true : null, "Update request dayoff success");

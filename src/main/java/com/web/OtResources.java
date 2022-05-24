@@ -72,6 +72,12 @@ public class OtResources {
     }
 
     @Transactional
+    @DeleteMapping("deletes")
+    public Object deleteOts(@RequestBody List<Long> ids){
+        return ResponseDto.of(this.otService.deleteByIds(ids) ? true : null, "Deletes OT success");
+    }
+
+    @Transactional
     @PatchMapping("change-status")
     public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(this.otService.changeStatus(ids, status) == true ? true : null, "Update OT success");
