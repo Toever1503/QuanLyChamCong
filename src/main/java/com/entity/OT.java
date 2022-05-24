@@ -21,6 +21,8 @@ public class OT {
     @ManyToOne(targetEntity = Staff.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "staff_id")
     private Staff staff;
+    @Column(name ="note")
+    private String note;
     @Column(name = "time_start")
     private Long time_start;
     @Column(name = "time_end")

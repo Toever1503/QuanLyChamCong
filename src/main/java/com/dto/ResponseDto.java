@@ -17,12 +17,14 @@ public class ResponseDto implements Serializable {
     private String result;
     private Object data;
 
+
     public ResponseDto(String message, String result, Object data) {
         this.message = message;
         this.result = result;
         this.data = data;
     }
 
+    //Method and data custom response
     public static ResponseDto of(Object data, String prefix) {
         return new ResponseDto(data != null ? prefix.concat(" successfully!") : prefix.concat(" failed!"), data != null ? "SUCCESS" : "ERROR", data);
     }

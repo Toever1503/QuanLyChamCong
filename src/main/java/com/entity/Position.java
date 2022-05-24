@@ -17,16 +17,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 public class Position {
-    public static String ADMINISTRATOR = "ADMINISTRATOR";
-    public static String HR_MANAGER = "HR_MANAGER";
-    public static String LEADER = "LEADER";
-    public static String STAFF = "STAFF";
-
+    public final static String ADMINISTRATOR = "ADMINISTRATOR";
+    public final static String HR_MANAGER = "HR_MANAGER";
+    public final static String LEADER = "LEADER";
+    public final static String STAFF = "STAFF";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long positionId;
-
-
     @Column(name = "position_name", unique = true)
     private String positionName;
 }

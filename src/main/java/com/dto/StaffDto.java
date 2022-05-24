@@ -17,7 +17,6 @@ public class StaffDto {
 
     private String staffName;
     private String email;
-    private String password;
     private Date birthday;
     private Double salary;
     private String avatar;
@@ -25,13 +24,13 @@ public class StaffDto {
     private String manager;
     private String position;
 
+    //Entity to Dto
     public static StaffDto toDto(Staff entity) {
         if (entity == null) throw new RuntimeException("Entity is null");
         return StaffDto.builder()
                 .staffId(entity.getStaffId())
                 .staffName(entity.getStaffName())
                 .email(entity.getEmail())
-                .password(entity.getPassword())
                 .birthday(entity.getBirthday())
                 .salary(entity.getSalary())
                 .avatar(entity.getAvatar())
