@@ -20,7 +20,7 @@ public class TimeLateDto {
 
     private String status;
 
-    private Long staff;
+    private String staff;
 
     //Entity to Dto
     public static TimeLateDto entityToDto(TimeLate timeLate) {
@@ -29,7 +29,7 @@ public class TimeLateDto {
                 .timeIn(timeLate.getTimeIn())
                 .note(timeLate.getNote())
                 .status(timeLate.getStatus())
-                .staff(timeLate.getStaff().getStaffId())
+                .staff(timeLate.getStaff().getStaffName())
                 .build();
     }
 }

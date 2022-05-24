@@ -70,26 +70,18 @@ public class TimekeepingResources {
 
     @Transactional
     @DeleteMapping("/{id}")
-    public Object deleteTimeKeeping(@PathVariable("id") Long id, Pageable pageable) {
-        if (timekeepingService.deleteById(id)) {
-            return ResponseDto.of(timekeepingService.findAll(pageable).map(TimeKeepingDto::entityToDto), "Delete timekeeping success");
-        } else {
-            return ResponseDto.of(null, "Delete timekeeping fail");
-        }
+    public Object deleteTimeKeeping(@PathVariable Long id) {
+        return ResponseDto.of(this.timekeepingService.deleteById(id) ? true : null, "Delete timekeeping");
     }
 
     @Transactional
     @DeleteMapping("deletes")
-    public Object deleteListTimekeeping(@RequestBody List<Long> ids, Pageable pageable){
-        if(timekeepingService.deleteByIds(ids)){
-            return ResponseDto.of(this.timekeepingService.findAll(pageable).map(TimeKeepingDto::entityToDto), "Delete timekeepings success");
-        }else{
-            return ResponseDto.of(null, "Delete list timekeeping fail");
-        }
+    public Object deleteListTimekeeping(@RequestBody List<Long> ids) {
+        return ResponseDto.of(timekeepingService.deleteByIds(ids) ? true : null, "Delete timekeepings");
     }
 
     @GetMapping("get-request-by-date/{timein}/{timeout}")
-    public ResponseDto getAllRequestsByDate(@PathVariable long timein,@PathVariable long timeout, Pageable page) {
+    public ResponseDto getAllRequestsByDate(@PathVariable long timein, @PathVariable long timeout, Pageable page) {
         return ResponseDto.of(this.timekeepingService.getAllRequestsByTime(timein, timeout, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + timein + timeout);
     }
 }
