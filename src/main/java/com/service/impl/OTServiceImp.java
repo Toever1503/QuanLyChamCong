@@ -39,6 +39,7 @@ public class OTServiceImp implements OTService {
         if (model == null) throw new RuntimeException("Ot Model is null");
         return OT.builder()
                 .id(model.getId())
+                .note(model.getNote())
                 .time_start(model.getTime_start())
                 .time_end(model.getTime_end())
                 .multiply(model.getMultiply())
@@ -108,9 +109,8 @@ public class OTServiceImp implements OTService {
     }
     //Tìm tất cả yêu cầu làm thêm giờ theo quản lí và thời gian // Find all overtime requests by manager and time
     @Override
-    public Page<OT> getAllRequestsByDate(long date, Pageable page) {
-        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
-        return this.otRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    public Page<OT> getAllRequestsByTime(long timein, long timeout, Pageable page) {
+        return this.otRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), timein, timeout, page);
     }
     //Tìm tất cả yêu cầu làm thêm giờ của tôi // Find all my overtime requests
     @Override

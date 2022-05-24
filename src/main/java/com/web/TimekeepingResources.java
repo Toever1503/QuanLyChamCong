@@ -92,6 +92,9 @@ public class TimekeepingResources {
     @GetMapping("get-request-by-date/{date}")
     public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
         return ResponseDto.of(this.timekeepingService.getAllRequestsByDate(date, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + date);
-    }
 
+    @GetMapping("get-request-by-date/{timein}/{timeout}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long timein,@PathVariable long timeout, Pageable page) {
+        return ResponseDto.of(this.timekeepingService.getAllRequestsByTime(timein, timeout, page).map(TimeKeepingDto::entityToDto), "Get all request timekeeping by date: " + timein + timeout);
+    }
 }

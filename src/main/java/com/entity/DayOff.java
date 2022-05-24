@@ -21,6 +21,9 @@ public class DayOff {
     @JoinColumn(name = "staff_id")
     private Staff staff;
 
+    @Column(name ="note")
+    private String note;
+
     @Column(name = "time_start")
     private Long time_start;
 

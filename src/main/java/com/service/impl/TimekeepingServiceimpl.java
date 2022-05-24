@@ -86,9 +86,8 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     }
     // Tìm tất cả yêu cầu chấm công từ nhân viên theo quản lí và thời gian // Find all attendant request by staff by manager and time
     @Override
-    public Page<TimeKeeping> getAllRequestsByDate(long date, Pageable page) {
-        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
-        return this.timekeepingRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(),times[0], times[1], page);
+    public Page<TimeKeeping> getAllRequestsByTime(long timein, long timeout, Pageable page) {
+        return this.timekeepingRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), timein, timeout, page);
     }
     // Tìm tất cả yêu cầu chấm công của tôi // Find all my attendant request
     @Override

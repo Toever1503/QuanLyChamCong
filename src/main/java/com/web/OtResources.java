@@ -78,9 +78,9 @@ public class OtResources {
     }
 
     @Transactional
-    @GetMapping("get-request-by-date/{date}")
-    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
-        return ResponseDto.of(this.otService.getAllRequestsByDate(date, page).map(OTDto::toDto), "Get all request OT by date: " + date);
+    @GetMapping("get-request-by-date/{timein}/{timeout}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long timein, @PathVariable long timeout ,Pageable page) {
+        return ResponseDto.of(this.otService.getAllRequestsByTime(timein,timeout, page).map(OTDto::toDto), "Get all request OT by date: " + timein + timeout);
     }
 
 

@@ -18,4 +18,6 @@ public interface IOTRepository extends JpaRepository<OT, Long> {
     //Tìm kiếm tất cả yêu cầu làm thêm giờ từ nhân viên theo quản lí, thời gian nghỉ // Find all overtime request from employee by manager id and time
     @Query("select o from OT o join Staff s on s.staffId = o.staff.staffId where s.manager.staffId = ?1 and o.time_start >= ?2 and o.time_start <= ?3")
     Page<OT> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
+
+    void deleteAllByStaffStaffId(Long staff_id);
 }

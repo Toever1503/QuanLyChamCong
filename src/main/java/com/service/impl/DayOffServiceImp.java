@@ -30,6 +30,7 @@ public class DayOffServiceImp implements DayOffService {
         if (model == null) throw new RuntimeException("DayOffModel is null");
         return DayOff.builder()
                 .id(model.getId())
+                .note(model.getNote())
                 .time_start(model.getTime_start())
                 .time_end(model.getTime_end())
                 .status(model.getStatus())
@@ -110,9 +111,8 @@ public class DayOffServiceImp implements DayOffService {
 
     //Tìm kiếm tất cả yêu cầu nghỉ từ nhân viên theo quản lí, thời gian // Find all day off request from employee by manager id and time
     @Override
-    public Page<DayOff> getAllRequestsByDate(long date, Pageable page) {
-        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
-        return this.dayOffRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    public Page<DayOff> getAllRequestsByTime(long timein, long timeout, Pageable page) {
+        return this.dayOffRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), timein, timeout, page);
     }
 
     //Tìm tất cả yêu cầu nghỉ của bản thân // Find all day off request of current user

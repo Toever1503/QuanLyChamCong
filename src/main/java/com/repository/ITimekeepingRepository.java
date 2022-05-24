@@ -29,4 +29,6 @@ public interface ITimekeepingRepository extends JpaRepository<TimeKeeping, Long>
     @Modifying
     @Query("delete from TimeKeeping t where t.id in ?1")
     void deleteByIdIn(List<Long> ids);
+
+    void deleteAllByStaffStaffId(Long staff_id);
 }
