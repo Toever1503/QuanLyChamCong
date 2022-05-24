@@ -41,10 +41,10 @@ public class Staff {
     private String avatar;
 
 
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")
     private Date createdAt;
+
     @ManyToOne
     @JoinColumn(name = "manager_id")
     private Staff manager;

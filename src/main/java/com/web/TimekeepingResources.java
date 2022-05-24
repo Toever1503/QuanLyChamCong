@@ -63,7 +63,6 @@ public class TimekeepingResources {
 
     // management approve request timeKeeping
     @Transactional
-
     @PatchMapping("change-status")
     public Object changeStatus(@RequestBody List<Long> ids, @RequestParam("status") RequestStatusUtil status) {
         return ResponseDto.of(timekeepingService.changeStatus(ids, status) == true ? true : null, "Update timekeeping success");
@@ -76,6 +75,16 @@ public class TimekeepingResources {
             return ResponseDto.of(timekeepingService.findAll(pageable).map(TimeKeepingDto::entityToDto), "Delete timekeeping success");
         } else {
             return ResponseDto.of(null, "Delete timekeeping fail");
+        }
+    }
+
+    @Transactional
+    @DeleteMapping("deletes")
+    public Object deleteListTimekeeping(@RequestBody List<Long> ids, Pageable pageable){
+        if(timekeepingService.deleteByIds(ids)){
+            return ResponseDto.of(this.timekeepingService.findAll(pageable).map(TimeKeepingDto::entityToDto), "Delete timekeepings success");
+        }else{
+            return ResponseDto.of(null, "Delete list timekeeping fail");
         }
     }
 

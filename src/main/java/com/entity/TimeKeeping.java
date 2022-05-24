@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -28,8 +30,9 @@ public class TimeKeeping {
     @Column(name = "status")
     private String status;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "staff_id")
-    private Staff staff;
+        @OneToOne(fetch = FetchType.EAGER, optional = false)
+        @JoinColumn(name = "staff_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        private Staff staff;
 
 }
