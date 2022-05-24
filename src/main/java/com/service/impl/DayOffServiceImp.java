@@ -30,6 +30,7 @@ public class DayOffServiceImp implements DayOffService {
         if (model == null) throw new RuntimeException("DayOffModel is null");
         return DayOff.builder()
                 .id(model.getId())
+                .note(model.getNote())
                 .time_start(model.getTime_start())
                 .time_end(model.getTime_end())
                 .status(model.getStatus())
