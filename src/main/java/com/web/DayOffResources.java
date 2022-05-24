@@ -80,8 +80,8 @@ public class DayOffResources {
     }
 
     @Transactional
-    @GetMapping("get-request-by-date/{date}")
-    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
-        return ResponseDto.of(this.dayOffService.getAllRequestsByDate(date, page).map(DayOffDTO::toDto), "Get all request dayoff by date: " + date);
+    @GetMapping("get-request-by-date/{timein}/{timeout}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long timein,@PathVariable long timeout, Pageable page) {
+        return ResponseDto.of(this.dayOffService.getAllRequestsByTime(timein,timeout, page).map(DayOffDTO::toDto), "Get all request dayoff by date: " + timein + timeout);
     }
 }

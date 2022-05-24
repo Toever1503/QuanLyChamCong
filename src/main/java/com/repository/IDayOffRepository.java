@@ -16,4 +16,6 @@ public interface IDayOffRepository extends JpaRepository<DayOff, Long> {
     //Tìm kiếm tất cả yêu cầu nghỉ từ nhân viên theo quản lí, thời gian nghỉ // Find all day off request from employee by manager id and time
     @Query("select d from DayOff d join Staff s on s.staffId = d.staff.staffId where s.manager.staffId = ?1 and d.time_start >= ?2 and d.time_start <= ?3")
     Page<DayOff> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
+
+    void deleteAllByStaffStaffId(Long staff_id);
 }

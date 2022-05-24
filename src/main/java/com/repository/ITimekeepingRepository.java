@@ -21,4 +21,6 @@ public interface ITimekeepingRepository extends JpaRepository<TimeKeeping, Long>
     //Tìm tất cả yêu cầu chấm công từ nhân viên theo quản lí vả thời gian// Find all attendant report by manager id and time
     @Query("select t from TimeKeeping t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1 and t.timeIn >= ?2 and t.timeIn <= ?3")
     Page<TimeKeeping> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
+
+    void deleteAllByStaffStaffId(Long staff_id);
 }

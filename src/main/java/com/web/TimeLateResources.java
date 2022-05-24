@@ -90,9 +90,9 @@ public class TimeLateResources {
     }
 
     @Transactional
-    @GetMapping("get-request-by-date/{date}")
-    public ResponseDto getAllRequestsByDate(@PathVariable long date, Pageable page) {
-        return ResponseDto.of(this.timeLateService.getAllRequestsByDate(date, page).map(TimeLateDto::entityToDto), "Get all request time late by date: " + date);
+    @GetMapping("get-request-by-date/{timein}/{timeout}")
+    public ResponseDto getAllRequestsByDate(@PathVariable long timein,@PathVariable long timeout, Pageable page) {
+        return ResponseDto.of(this.timeLateService.getAllRequestsByTime(timein, timeout, page).map(TimeLateDto::entityToDto), "Get all request time late by date: " + timein+ timeout);
     }
 
 }

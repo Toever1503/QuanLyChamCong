@@ -20,4 +20,6 @@ public interface ITimeLateRepository extends JpaRepository<TimeLate, Long> {
     //Tìm tất cả yêu cầu làm muộn từ nhân viên theo quản lí vả thời gian// Find all late work request by manager id and time
     @Query("select t from TimeLate t join Staff s on s.staffId = t.staff.staffId where s.manager.staffId = ?1")
     Page<TimeLate> findStaffOfManager(Long staffId, Pageable page);
+
+    void deleteAllByStaffStaffId(Long staff_id);
 }

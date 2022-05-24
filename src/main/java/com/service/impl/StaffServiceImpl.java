@@ -7,8 +7,7 @@ import com.config.jwt.JwtUserLoginModel;
 import com.entity.Position;
 import com.entity.Staff;
 import com.model.StaffModel;
-import com.repository.IPositionRepository;
-import com.repository.IStaffRepository;
+import com.repository.*;
 import com.service.CustomUserDetail;
 import com.service.IStaffService;
 import org.slf4j.Logger;
@@ -36,14 +35,32 @@ public class StaffServiceImpl implements IStaffService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final IDayOffRepository dayOffRepository;
+
+    private final IOTRepository otRepository;
+
+    private final ITimekeepingRepository timekeepingRepository;
+
+    private final ITimeLateRepository timeLateRepository;
+
+    private final ISalaryRepository salaryRepository;
+
+
+
+
     private final Logger logger = LoggerFactory.getLogger(StaffServiceImpl.class);
 
-    public StaffServiceImpl(IStaffRepository staffRepository, IPositionRepository positionRepository, JwtProvider jwtProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
+    public StaffServiceImpl(IStaffRepository staffRepository, IPositionRepository positionRepository, JwtProvider jwtProvider, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, IDayOffRepository dayOffRepository, IOTRepository otRepository, ITimekeepingRepository timekeepingRepository, ITimeLateRepository timeLateRepository, ISalaryRepository salaryRepository) {
         this.staffRepository = staffRepository;
         this.positionRepository = positionRepository;
+        this.dayOffRepository = dayOffRepository;
         this.jwtProvider = jwtProvider;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.otRepository = otRepository;
+        this.timekeepingRepository = timekeepingRepository;
+        this.timeLateRepository = timeLateRepository;
+        this.salaryRepository = salaryRepository;
         try {
 //            Staff administrator = new Staff(1l, "admin", "admin@admin.com", this.passwordEncoder.encode("1234"), new Date("2022-05-18"), 100.0, null, Calendar.getInstance().getTime(), null, this.positionRepository.findByPositionName(Position.ADMINISTRATOR));
             Staff administrator = this.staffRepository.findById(1l).get();
@@ -112,6 +129,11 @@ public class StaffServiceImpl implements IStaffService {
     @Override
     public boolean deleteById(Long id) {
         if (id == 1l) throw new RuntimeException("Can not delete administrator");
+        this.dayOffRepository.deleteAllByStaffStaffId(id);
+        this.otRepository.deleteAllByStaffStaffId(id);
+        this.salaryRepository.deleteAllByStaffStaffId(id);
+        this.timekeepingRepository.deleteAllByStaffStaffId(id);
+        this.timeLateRepository.deleteAllByStaffStaffId(id);
         this.staffRepository.deleteById(id);
         return true;
     }

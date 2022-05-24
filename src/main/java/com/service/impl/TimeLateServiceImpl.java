@@ -94,9 +94,8 @@ public class TimeLateServiceImpl implements ITimeLateService {
 
     //Tìm tất cả yêu cầu làm muộn từ nhân viên theo quản lí và thời gian// Find all late work request by manager id and time
     @Override
-    public Page<TimeLate> getAllRequestsByDate(long date, Pageable page) {
-        Long[] times = TimeUtil.getBeginAndLastTimeDate(date);
-        return this.timeLateRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), times[0], times[1], page);
+    public Page<TimeLate> getAllRequestsByTime(long timein, long timeout, Pageable page) {
+        return this.timeLateRepository.findAllRequestByDate(SecurityUtil.getCurrentUserId(), timein, timeout, page);
     }
 
     // Tìm tất cả yêu cầu làm muộn của tôi // Find all my late work requests
