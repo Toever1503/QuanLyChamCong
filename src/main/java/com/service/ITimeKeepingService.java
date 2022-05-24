@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ITimeKeepingService extends IBaseService<TimeKeeping, TimeKeepingModel, Long> {
     boolean changeStatus(List<Long> ids, RequestStatusUtil status);
 
-    Page<TimeKeeping> getAllRequestsByDate(long date, Pageable page);
+    Page<TimeKeeping> getAllRequestsByTime(long timein, long timeout, Pageable page);
 
     Page<TimeKeeping>findAllStaffRequests(Long staffId,Pageable page);
 }

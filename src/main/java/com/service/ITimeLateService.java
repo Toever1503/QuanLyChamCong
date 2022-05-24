@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ITimeLateService extends IBaseService<TimeLate, TimelateModel, Long> {
     boolean changeStatus(List<Long> ids, RequestStatusUtil status);
 
-    Page<TimeLate> getAllRequestsByDate(long date, Pageable page);
+    Page<TimeLate> getAllRequestsByTime(long timein, long timeout, Pageable page);
 
     Page<TimeLate> findAllStaffRequests(Long staffId, Pageable page);
 }
