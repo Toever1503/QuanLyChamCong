@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("request-status")
+@RequestMapping("api/request-status")
 public class RequestStatusResources {
 
 
