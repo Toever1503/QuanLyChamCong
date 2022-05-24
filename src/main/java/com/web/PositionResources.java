@@ -22,7 +22,6 @@ public class PositionResources {
         this.positionRepository = positionRepository;
         try {
             this.positionRepository.saveAll(List.of(new Position(1l, Position.ADMINISTRATOR),
-                    new Position(2l, Position.HR_MANAGER),
                     new Position(3l, Position.LEADER),
                     new Position(4l, Position.STAFF)));
 
