@@ -33,7 +33,7 @@ public class SalaryResources {
     }
 
     @GetMapping("my-salary/{month}")
-    public ResponseDto getMySalaryByMonth(int month) {
+    public ResponseDto getMySalaryByMonth(@PathVariable int month) {
         return ResponseDto.of(this.salaryService.getMySalaryByMonth(month), "Get salaries by staff by month");
     }
 
@@ -43,16 +43,16 @@ public class SalaryResources {
         return ResponseDto.of(this.salaryService.calculateTotalSalaryForEmployee(page).map(SalaryDto::toDto), "Get all salaries");
     }
 
-    @RolesAllowed({Position.ADMINISTRATOR})
-    @PostMapping("export_file_salaries")
-    public ResponseDto getExportAllSalariesOfStaff(HttpServletResponse response){
+    //    @RolesAllowed({Position.ADMINISTRATOR})
+    @GetMapping("export_file_salaries")
+    public Object getExportAllSalariesOfStaff(HttpServletResponse response) {
         HSSFWorkbook workbook = null;
         try {
             workbook = new HSSFWorkbook();
             CreationHelper createHelper = workbook.getCreationHelper();
             Sheet sheet = workbook.createSheet("Report");
             // merge tu hang 0->0, tu cot 0->7
-            sheet.addMergedRegion(new CellRangeAddress(0, 0 , 0, 7));
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
             List<SalaryDto> salaryDtoList = this.salaryService.calculateTotalSalaryForEmployee().stream().map(SalaryDto::toDto).collect(Collectors.toList());
 
@@ -94,12 +94,12 @@ public class SalaryResources {
             cellHeader.setCellValue("THỐNG KÊ LƯƠNG CỦA NHÂN VIÊN THEO THÁNG");
             cellHeader.setCellStyle(headerCellStyle);
 
-            rowHeader = sheet.createRow(rowIndex +=1);
+            rowHeader = sheet.createRow(rowIndex += 1);
             cellHeader = rowHeader.createCell(cellIndex);
             cellHeader.setCellValue("STT");
             cellHeader.setCellStyle(headerCellStyle);
 
-            cellHeader = rowHeader.createCell(cellIndex +=1);
+            cellHeader = rowHeader.createCell(cellIndex += 1);
             cellHeader.setCellValue("TÊN NHÂN VIÊN");
             cellHeader.setCellStyle(headerCellStyle);
 
@@ -129,7 +129,7 @@ public class SalaryResources {
 
             Integer numberOfItem = 0;
             for (SalaryDto item : salaryDtoList) {
-                numberOfItem +=1;
+                numberOfItem += 1;
                 rowIndex += 1;
                 cellIndex = 0;
                 rowHeader = sheet.createRow(rowIndex);
@@ -138,7 +138,7 @@ public class SalaryResources {
                 cellHeader.setCellValue(numberOfItem);
                 cellHeader.setCellStyle(contentCellStyle);
 
-                cellHeader = rowHeader.createCell(cellIndex +=1);
+                cellHeader = rowHeader.createCell(cellIndex += 1);
                 cellHeader.setCellValue(item.getStaff());
                 cellHeader.setCellStyle(contentCellStyle);
 
@@ -177,18 +177,18 @@ public class SalaryResources {
             sheet.setColumnWidth(6, 7500);
             sheet.setColumnWidth(7, 7500);
 
-            response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Expires", "0");
-            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-            response.setHeader("Pragma", "public");
-            response.setHeader("Content-Disposition", "attachment; filename=ReportsData.xls");
-            ServletOutputStream out = response.getOutputStream();
-            workbook.write(out);
-            out.flush();
-            out.close();
+//            response.setContentType("application/vnd.ms-excel");
+//            response.setHeader("Expires", "0");
+//            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+//            response.setHeader("Pragma", "public");
+//            response.setHeader("Content-Disposition", "attachment; filename=ReportsData.xls");
+//            ServletOutputStream out = response.getOutputStream();
+//            workbook.write(out);
+//            out.flush();
+//            out.close();
         } catch (Exception e) {
             System.out.println(e);
         }
-        return ResponseDto.of(workbook, "export file salaries of staff succes");
+        return workbook;
     }
 }
