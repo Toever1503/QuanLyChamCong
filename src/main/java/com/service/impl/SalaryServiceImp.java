@@ -129,6 +129,18 @@ public class SalaryServiceImp implements ISalaryService {
         return this.salaryRepository.findAllByStaffStaffIdInAndMonth(staffIds, currentMonth, page);
     }
 
+    @Override
+    public List<Salary> calculateTotalSalaryForEmployee() {
+        List<Long> staffIds = new ArrayList<>();
+        this.staffRepository.findAllStaffForManager(SecurityUtil.getCurrentUserId())
+                .forEach(staff -> {
+                    staffIds.add(staff.getStaffId());
+                    this.calculateSalary(staff.getStaffId());
+                });
+        int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        return this.salaryRepository.findAllByStaffStaffIdInAndMonth(staffIds, currentMonth);
+    }
+
     //Tính lương nhân viên theo tháng // Calculate employee salary by month
     @Override
     public Salary getMySalaryByMonth(int month) {
