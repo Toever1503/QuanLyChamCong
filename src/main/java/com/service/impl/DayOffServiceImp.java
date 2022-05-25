@@ -60,7 +60,7 @@ public class DayOffServiceImp implements DayOffService {
     public DayOff add(DayOffModel model) {
         DayOff dayOff = this.toEntity(model);
         dayOff.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
-        dayOff.setTime_created(Calendar.getInstance().getTime());
+        dayOff.setTimeCreated(Calendar.getInstance().getTime());
         dayOff.setStatus(RequestStatusUtil.PENDING.name());
         return this.dayOffRepository.save(dayOff);
     }

@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,12 +23,14 @@ public class TimeKeepingDto {
     private String status;
 
     private String staff;
+    private Date timeCreated;
 
     //Entity to DTO
     public static TimeKeepingDto entityToDto(TimeKeeping entity) {
         return TimeKeepingDto.builder()
                 .id(entity.getId())
                 .timeIn(entity.getTimeIn())
+                .timeCreated(entity.getTimeCreated())
                 .note(entity.getNote())
                 .status(entity.getStatus())
                 .staff(entity.getStaff().getStaffName())

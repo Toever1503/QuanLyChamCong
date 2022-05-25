@@ -1,3 +1,4 @@
+
 package com.entity;
 
 import lombok.AllArgsConstructor;
@@ -9,32 +10,28 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "files")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Builder
-@Entity
-@Table(name = "TimeLate")
-public class TimeLate {
+public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "timeIn")
-    private Long timeIn;
+    @Column(name = "file_guid", unique = true, nullable = false)
+    private String fileGuid;
 
-    @Column(name ="note")
-    private String note;
+    @Column(name = " file_type")
+    private String fileType;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "fileUrl", nullable = false)
+    private String fileUrl;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time_created")
     private Date timeCreated;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "staff_id")
-    private Staff staff;
 }

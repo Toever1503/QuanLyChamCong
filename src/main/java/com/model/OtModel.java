@@ -9,11 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 public class OtModel {
     private Long id;
-    private Long staff;
+    private Long staff_id;
+    private String note;
     private Long time_start;
     private Long time_end;
-    private java.util.Date time_created;
     private Float multiply;
     private String status;
-
 }

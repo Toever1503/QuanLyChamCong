@@ -18,7 +18,6 @@ public class DayOffModel {
     private Long id;
 
     @ApiModelProperty(notes = "id của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
-
     private Long staff;
 
     @ApiModelProperty(notes = "note của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
@@ -36,7 +35,7 @@ public class DayOffModel {
     private Long time_end;
 
     @ApiModelProperty(notes = "Thời gian tạo của dayoff, tự động tạo", dataType = "date", example = "1")
-    private java.util.Date time_created;
+    private java.util.Date timeCreated;
 
     @ApiModelProperty(notes = "trạng thái của phiếu(PENDING, REJECTED, APPROVED)", dataType = "enum", example = "1")
     @NotNull
@@ -51,7 +50,7 @@ public class DayOffModel {
                 .note(entity.getNote())
                 .time_start(entity.getTime_start())
                 .time_end(entity.getTime_end())
-                .time_created(entity.getTime_created())
+                .timeCreated(entity.getTimeCreated())
                 .status(entity.getStatus())
                 .build();
     }

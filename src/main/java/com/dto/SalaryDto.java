@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ public class SalaryDto {
     private int off_day;
     private double income;
     private String staff;
+    private Date timeCreated;
 
     private Map<String, Object> work_day;
     private Map<String, Object> ot_hour;
@@ -42,6 +44,7 @@ public class SalaryDto {
                 .id(salary.getId())
                 .staff(salary.getStaff().getStaffName())
                 .income(income)
+                .timeCreated(salary.getTimeCreated())
                 .late_day(salary.getLate_day())
                 .off_day(salary.getOff_day())
                 .work_day(work_day)
