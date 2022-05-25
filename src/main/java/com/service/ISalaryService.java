@@ -13,8 +13,6 @@ public interface ISalaryService extends IBaseService<Salary, SalaryModel,Long>{
 
     Page<Salary> calculateTotalSalaryForEmployee(Pageable page);
 
-    List<Salary> calculateTotalSalaryForEmployee();
-
     Salary getMySalaryByMonth(int month);
 
     Salary getSalaryOfStaff(Long staffId);

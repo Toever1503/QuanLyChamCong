@@ -11,6 +11,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +46,8 @@ public class SalaryResources {
 
     //    @RolesAllowed({Position.ADMINISTRATOR})
     @GetMapping("export_file_salaries")
-    public Object getExportAllSalariesOfStaff(HttpServletResponse response) {
+    @ResponseBody
+    public void getExportAllSalariesOfStaff(HttpServletResponse response) {
         HSSFWorkbook workbook = null;
         try {
             workbook = new HSSFWorkbook();
@@ -54,8 +56,7 @@ public class SalaryResources {
             // merge tu hang 0->0, tu cot 0->7
             sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 7));
 
-            List<SalaryDto> salaryDtoList = this.salaryService.calculateTotalSalaryForEmployee().stream().map(SalaryDto::toDto).collect(Collectors.toList());
-
+            List<SalaryDto> salaryDtoList = this.salaryService.calculateTotalSalaryForEmployee(PageRequest.of(0, 100000)).stream().map(SalaryDto::toDto).collect(Collectors.toList());
             HSSFFont font = workbook.createFont();
             font.setFontHeightInPoints((short) 12);
             font.setColor(HSSFFont.COLOR_NORMAL);
@@ -177,18 +178,17 @@ public class SalaryResources {
             sheet.setColumnWidth(6, 7500);
             sheet.setColumnWidth(7, 7500);
 
-//            response.setContentType("application/vnd.ms-excel");
-//            response.setHeader("Expires", "0");
-//            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-//            response.setHeader("Pragma", "public");
-//            response.setHeader("Content-Disposition", "attachment; filename=ReportsData.xls");
-//            ServletOutputStream out = response.getOutputStream();
-//            workbook.write(out);
-//            out.flush();
-//            out.close();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Expires", "0");
+            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+            response.setHeader("Pragma", "public");
+            response.setHeader("Content-Disposition", "attachment; filename=ReportsData.xls");
+            ServletOutputStream out = response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+            out.close();
         } catch (Exception e) {
             System.out.println(e);
         }
-        return workbook;
     }
 }
