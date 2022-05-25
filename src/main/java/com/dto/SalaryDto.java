@@ -17,6 +17,8 @@ public class SalaryDto {
     private Long id;
     private int late_day;
     private int off_day;
+    private double income;
+    private String staff;
 
     private Map<String, Object> work_day;
     private Map<String, Object> ot_hour;
@@ -38,6 +40,8 @@ public class SalaryDto {
         ot_hour.put("salary", salary.getOt_hour() * incomePerHour);
         return SalaryDto.builder()
                 .id(salary.getId())
+                .staff(salary.getStaff().getStaffName())
+                .income(income)
                 .late_day(salary.getLate_day())
                 .off_day(salary.getOff_day())
                 .work_day(work_day)
