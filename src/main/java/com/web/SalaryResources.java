@@ -105,7 +105,7 @@ public class SalaryResources {
             cellHeader.setCellStyle(headerCellStyle);
 
             cellHeader = rowHeader.createCell(cellIndex += 1);
-            cellHeader.setCellValue("TỔNG LƯƠNG");
+            cellHeader.setCellValue("LƯƠNG");
             cellHeader.setCellStyle(headerCellStyle);
 
             cellHeader = rowHeader.createCell(cellIndex += 1);
@@ -148,7 +148,7 @@ public class SalaryResources {
                 cellHeader.setCellStyle(contentCellStyle);
 
                 cellHeader = rowHeader.createCell(cellIndex += 1);
-                cellHeader.setCellValue(item.getWork_day().containsKey("day"));
+                cellHeader.setCellValue((Double) item.getWork_day().get("day"));
                 cellHeader.setCellStyle(contentCellStyle);
 
                 cellHeader = rowHeader.createCell(cellIndex += 1);
@@ -156,7 +156,7 @@ public class SalaryResources {
                 cellHeader.setCellStyle(contentCellStyle);
 
                 cellHeader = rowHeader.createCell(cellIndex += 1);
-                cellHeader.setCellValue(item.getOt_hour().containsKey("hour"));
+                cellHeader.setCellValue((Double) item.getOt_hour().get("hour"));
                 cellHeader.setCellStyle(contentCellStyle);
 
                 cellHeader = rowHeader.createCell(cellIndex += 1);
