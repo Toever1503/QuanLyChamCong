@@ -136,4 +136,12 @@ public class SalaryServiceImp implements ISalaryService {
         return this.salaryRepository.findByStaffStaffIdAndMonth(staffId, month).orElse(this.calculateSalary(staffId));
     }
 
+    @Override
+    public Salary getSalaryOfStaff(Long staffId) {
+        if(salaryRepository.findTopByStaffStaffIdOrderByIdDesc(staffId).isPresent())
+        return salaryRepository.findTopByStaffStaffIdOrderByIdDesc(staffId).get();
+        else
+            return null;
+    }
+
 }

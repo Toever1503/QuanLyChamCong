@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2 style="color: deepskyblue">Monthly Salary report</h2>
+    <h3 style="color: firebrick">Salary Detail</h3>
+    <h4 th:text="|Staff : ${salary.getStaff()}|"></h4>
+    <h4 th:text="|Late Days : ${salary.getLate_day()}|"></h4>
+    <h4 th:text="|Income : ${salary.getIncome()}|"></h4>
+    <table style="border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);">
+        <thead>
+        <tr style="background-color: deepskyblue;
+    color: #ffffff;
+    text-align: left;">
+            <td>Income</td>
+            <td>Count</td>
+            <td>Amount</td>
+        </tr>
+        </thead>
+        <tbody style="border-bottom: 1px solid #dddddd;">
+        <tr style="border-bottom: 1px solid #dddddd;">
+            <td style=" padding: 12px 15px;">
+                <!--                <img style="width: 100px;height: 100px" th:src="'http://localhost:8088/uploads/'+ ${item.image}">-->
+                <span>Work Day</span>
+            </td>
+            <td  th:text ="${salary.getWork_day().get('day')}"></td>
+            <td  th:text ="${salary.getWork_day().get('salary')}"></td>
+
+            <!--            <td  style=" padding: 12px 15px;" th:text ="${item.price * item.sl}"></td>-->
+        </tr>
+        <tr style="border-bottom: 1px solid #dddddd;">
+            <td style=" padding: 12px 15px;">
+                <!--                <img style="width: 100px;height: 100px" th:src="'http://localhost:8088/uploads/'+ ${item.image}">-->
+                <span>Overtime</span>
+            </td>
+            <td  th:text ="${salary.getOt_hour().get('hour')}"></td>
+            <td  th:text ="${salary.getOt_hour().get('salary')}"></td>
+
+            <!--            <td  style=" padding: 12px 15px;" th:text ="${item.price * item.sl}"></td>-->
+        </tr>
+        <tr style="border-bottom: 1px solid #dddddd;">
+            <td style=" padding: 12px 15px;">
+                <!--                <img style="width: 100px;height: 100px" th:src="'http://localhost:8088/uploads/'+ ${item.image}">-->
+                <span>Day Off</span>
+            </td>
+            <td  th:text ="${salary.getOff_day()}"></td>
+            <td  th:text ="${salary.getOff_day()*salary.getWork_day().get('salary')/salary.getWork_day().get('day')}"></td>
+
+            <!--            <td  style=" padding: 12px 15px;" th:text ="${item.price * item.sl}"></td>-->
+        </tr>
+        <tr style="border-bottom: 1px solid #dddddd;">
+            <td>
+                <!--                <img style="width: 100px;height: 100px" th:src="'http://localhost:8088/uploads/'+ ${item.image}">-->
+                <span> </span>
+            </td>
+            <td style="font-size: 25px">Total</td>
+            <td th:text="${salary.getTotal_salary()}"></td>
+            <!--            <td  style=" padding: 12px 15px;" th:text ="${item.price * item.sl}"></td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -19,4 +19,5 @@ public interface ISalaryRepository extends JpaRepository<Salary, Long> {
     Optional<Salary> findByStaffStaffIdAndMonth(Long staffId, int month);
 
     void deleteAllByStaffStaffId(Long staffId);
+    Optional<Salary> findTopByStaffStaffIdOrderByIdDesc(Long staffId);
 }

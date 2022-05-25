@@ -13,4 +13,6 @@ public interface ISalaryService extends IBaseService<Salary, SalaryModel,Long>{
 
     Salary getMySalaryByMonth(int month);
 
+    Salary getSalaryOfStaff(Long staffId);
+
 }
