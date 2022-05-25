@@ -49,7 +49,7 @@ public class SalaryServiceImp implements ISalaryService {
     @Override
     public Salary findById(Long id) {
         if (salaryRepository.findById(id).isPresent())
-         return salaryRepository.findById(id).get();
+            return salaryRepository.findById(id).get();
         else
             return null;
     }
@@ -84,6 +84,7 @@ public class SalaryServiceImp implements ISalaryService {
     @Override
     public Salary calculateSalary(Long client_id) {
         Salary salaryModel = new Salary();
+        Staff staff = this.staffRepository.findById(client_id).orElseThrow(() -> new RuntimeException("Not found satff with id " + client_id));
         if (salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId() == client_id).filter(salary -> salary.getMonth() == LocalDate.now().getMonthValue()).findAny().isPresent()) {
             salaryModel = salaryRepository.findAll().stream().filter(salary -> salary.getStaff().getStaffId() == client_id).filter(salary -> salary.getMonth() == LocalDate.now().getMonthValue()).findAny().get();
             salaryModel.setId(salaryModel.getId());
@@ -101,17 +102,20 @@ public class SalaryServiceImp implements ISalaryService {
             }
         }
 
+        Double incomePerHour = staff.getSalary() / 20 / 24;
+
         salaryModel.setLate_day(timeLateRepository.findAll().stream().filter(timeLate -> timeLate.getStaff().getStaffId() == client_id).filter(timeLate -> timeLate.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
         salaryModel.setOt_hour(total_ot);
         salaryModel.setOff_day(dayOffRepository.findAll().stream().filter(dayOff -> dayOff.getStaff().getStaffId() == client_id).filter(dayOff -> dayOff.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
         salaryModel.setWork_day(timekeepingRepository.findAll().stream().filter(timeKeeping -> timeKeeping.getStaff().getStaffId() == client_id).filter(timeKeeping -> timeKeeping.getStatus().equals(RequestStatusUtil.APPROVED.toString())).collect(Collectors.toList()).size());
         salaryModel.setMonth(LocalDate.now().getMonthValue());
-        salaryModel.setTotal_salary(staffRepository.findById(client_id).get().getSalary() * salaryModel.getWork_day() + total_minus + total_price);
+
+        salaryModel.setTotal_salary(salaryModel.getWork_day() * (staff.getSalary() / 20) + (salaryModel.getOt_hour() * incomePerHour));
         salaryModel.setStaff(staffRepository.findById(client_id).get());
-        total_minus -= salaryModel.getOff_day() * staffRepository.findById(client_id).get().getSalary();
 
         return salaryRepository.save(salaryModel);
     }
+
     //Tính tổng lương quản lí cần trả // Calculate total amount of manager's employee salary
     @Override
     public Page<Salary> calculateTotalSalaryForEmployee(Pageable page) {
@@ -124,6 +128,7 @@ public class SalaryServiceImp implements ISalaryService {
         int currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
         return this.salaryRepository.findAllByStaffStaffIdInAndMonth(staffIds, currentMonth, page);
     }
+
     //Tính lương nhân viên theo tháng // Calculate employee salary by month
     @Override
     public Salary getMySalaryByMonth(int month) {

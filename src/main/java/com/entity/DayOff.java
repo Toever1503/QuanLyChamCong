@@ -33,7 +33,7 @@ public class DayOff {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time_created")
-    private Date time_created;
+    private Date timeCreated;
     @Column(name = "status")
     private String status;
 }

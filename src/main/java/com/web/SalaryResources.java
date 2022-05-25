@@ -19,11 +19,6 @@ public class SalaryResources {
     @Autowired
     ISalaryService salaryService;
 
-    @GetMapping("/all")
-    public ResponseDto getAllSalaries(Pageable pageable) {
-        return ResponseDto.of(salaryService.findAll(pageable).map(SalaryDto::toDto), "Get all salaries");
-    }
-
     @GetMapping("/all/{id}")
     public ResponseDto getAllSalariesByUser(@PathVariable("id") Long id) {
         return ResponseDto.of(salaryService.findAll().stream().filter(salary -> salary.getStaff().getStaffId() == id).collect(Collectors.toList()), "Get all salaries by staff");
@@ -37,7 +32,7 @@ public class SalaryResources {
     @RolesAllowed({Position.ADMINISTRATOR})
     @GetMapping("all-staff-salaries")
     public ResponseDto getAllSalariesOfStaff(Pageable page) {
-        return ResponseDto.of(this.salaryService.calculateTotalSalaryForEmployee(page), "Get all salaries");
+        return ResponseDto.of(this.salaryService.calculateTotalSalaryForEmployee(page).map(SalaryDto::toDto), "Get all salaries");
     }
 
 }

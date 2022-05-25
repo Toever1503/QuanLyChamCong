@@ -2,9 +2,8 @@ package com.service.impl;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
-import com.Util.TimeUtil;
 import com.entity.OT;
-import com.entity.OtModel;
+import com.model.OtModel;
 import com.entity.Position;
 import com.repository.IOTRepository;
 import com.repository.IStaffRepository;
@@ -57,7 +56,7 @@ public class OTServiceImp implements OTService {
         OT entity = toEntity(model);
         entity.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
         entity.setStatus(RequestStatusUtil.PENDING.name());
-        entity.setTime_created(Calendar.getInstance().getTime());
+        entity.setTimeCreated(Calendar.getInstance().getTime());
         return this.otRepository.save(entity);
     }
 
@@ -74,22 +73,13 @@ public class OTServiceImp implements OTService {
     //Xóa yêu cầu làm thêm giờ theo id // Delete overtime request by id
     @Override
     public boolean deleteById(Long id) {
-        if (otRepository.findById(id).isPresent()) {
-            otRepository.delete(otRepository.findById(id).get());
-            return true;
-        } else
-            return false;
+       this.otRepository.deleteById(id);
+       return true;
     }
     //Xóa nhiều yêu cầu làm thêm giờ theo id // Delete overtime requests by ids
     @Override
-    public boolean deleteByIds(List<Long> id) {
-        for (Long i : id
-        ) {
-            if (otRepository.findById(i).isPresent()) {
-                otRepository.delete(otRepository.findById(i).get());
-            } else
-                return false;
-        }
+    public boolean deleteByIds(List<Long> ids) {
+        ids.forEach(this::deleteById);
         return true;
     }
     //Phê duyệt, bác bỏ yêu cầu làm thêm giờ theo id// Approve Reject overtime requests by id

@@ -4,6 +4,10 @@ import com.entity.DayOff;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+
 @Getter
 @Setter
 @Builder
@@ -17,18 +21,25 @@ public class DayOffModel {
     private Long staff;
 
     @ApiModelProperty(notes = "note của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
+    @NotNull
     private String note;
 
     @ApiModelProperty(notes = "thời gian bắt đầu xin nghỉ, tính bằng miliseconds", dataType = "date", example = "191481941298410")
+    @Positive
+    @NotNull
     private Long time_start;
 
     @ApiModelProperty(notes = "thời gian kết thúc xin nghỉ, tính bằng miliseconds", dataType = "date", example = "191481941298410")
+    @Positive
+    @NotNull
     private Long time_end;
 
     @ApiModelProperty(notes = "Thời gian tạo của dayoff, tự động tạo", dataType = "date", example = "1")
-    private java.util.Date time_created;
+    private java.util.Date timeCreated;
 
     @ApiModelProperty(notes = "trạng thái của phiếu(PENDING, REJECTED, APPROVED)", dataType = "enum", example = "1")
+    @NotNull
+    @NotBlank
     private String status;
 
     //Entity to DTO
@@ -39,7 +50,7 @@ public class DayOffModel {
                 .note(entity.getNote())
                 .time_start(entity.getTime_start())
                 .time_end(entity.getTime_end())
-                .time_created(entity.getTime_created())
+                .timeCreated(entity.getTimeCreated())
                 .status(entity.getStatus())
                 .build();
     }

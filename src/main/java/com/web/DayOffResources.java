@@ -10,14 +10,17 @@ import com.entity.Position;
 import com.model.DayOffModel;
 import com.service.DayOffService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/day-offs")
+@Validated
 public class DayOffResources {
 
     private final DayOffService dayOffService;
@@ -51,17 +54,16 @@ public class DayOffResources {
         return ResponseDto.of(this.dayOffService.findAllStaffRequests(SecurityUtil.getCurrentUserId(), page).map(DayOffDTO::toDto), "Get all my request dayoff: ");
     }
 
-
     @Transactional
     @PostMapping
-    public ResponseDto add(@RequestBody DayOffModel model) {
+    public ResponseDto add(@RequestBody @Valid DayOffModel model) {
         model.setId(null);
         return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.add(model)), "Add request dayoff");
     }
 
     @Transactional
     @PutMapping("{id}")
-    public ResponseDto update(@PathVariable Long id, @RequestBody DayOffModel model, @RequestParam RequestStatusUtil status) {
+    public ResponseDto update(@PathVariable Long id, @RequestBody @Valid DayOffModel model, @RequestParam RequestStatusUtil status) {
         model.setId(id);
         model.setStatus(status.name());
         return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.update(model)), "update request dayoff");
@@ -71,6 +73,12 @@ public class DayOffResources {
     @DeleteMapping("{id}")
     public ResponseDto deleteById(@PathVariable Long id) {
         return ResponseDto.of(this.dayOffService.deleteById(id) == false ? null : true, "Delete request dayoff with id: " + id);
+    }
+
+    @Transactional
+    @DeleteMapping("deletes")
+    public Object deleteDayOffs(@RequestBody List<Long> ids){
+        return ResponseDto.of(this.dayOffService.deleteByIds(ids) ? true : null, "Delete dayOffs success");
     }
 
     @Transactional

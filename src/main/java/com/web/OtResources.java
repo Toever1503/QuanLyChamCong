@@ -2,11 +2,9 @@ package com.web;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
-import com.dto.DayOffDTO;
 import com.dto.OTDto;
 import com.dto.ResponseDto;
-import com.dto.TimeLateDto;
-import com.entity.OtModel;
+import com.model.OtModel;
 import com.entity.Position;
 import com.service.OTService;
 import org.springframework.data.domain.Pageable;
@@ -69,6 +67,12 @@ public class OtResources {
     @DeleteMapping("{id}")
     public ResponseDto deleteById(@PathVariable Long id) {
         return ResponseDto.of(this.otService.deleteById(id) == false ? null : true, "Delete request OT with id: " + id);
+    }
+
+    @Transactional
+    @DeleteMapping("deletes")
+    public Object deleteOts(@RequestBody List<Long> ids){
+        return ResponseDto.of(this.otService.deleteByIds(ids) ? true : null, "Deletes OT success");
     }
 
     @Transactional

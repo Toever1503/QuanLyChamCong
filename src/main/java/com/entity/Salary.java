@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Builder
 @NoArgsConstructor
@@ -29,6 +31,10 @@ public class Salary {
     private int month;
     @Column(name = "total_salary")
     private double total_salary;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "time_created")
+    private Date timeCreated;
     @ManyToOne(targetEntity = Staff.class)
     @JoinColumn(name = "staff_id")
     private Staff staff;

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -66,10 +67,13 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
         return true;
     }
 
+    // xoa nhieu request cung luc
     @Override
-    public boolean deleteByIds(List<Long> id) {
-        return false;
+    public boolean deleteByIds(List<Long> ids) {
+        ids.forEach(id -> timekeepingRepository.deleteById(id));
+        return true;
     }
+
     //Phê duyệt, từ chối yêu cầu chấm công // Approve or Reject attendant request
     @Override
     public boolean changeStatus(List<Long> ids, RequestStatusUtil status) {
