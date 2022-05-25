@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface ISalaryRepository extends JpaRepository<Salary, Long> {
     Page<Salary> findAllByStaffStaffIdInAndMonth(List<Long> staffIds, int month, Pageable pageable);
 
+    List<Salary> findAllByStaffStaffIdInAndMonth(List<Long> staffIds, int month);
+
     Optional<Salary> findByStaffStaffIdAndMonth(Long staffId, int month);
 
     void deleteAllByStaffStaffId(Long staffId);
