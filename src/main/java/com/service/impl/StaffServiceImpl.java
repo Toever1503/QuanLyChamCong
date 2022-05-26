@@ -122,6 +122,7 @@ public class StaffServiceImpl implements IStaffService {
         Staff original = this.findById(model.getStaffId());
         if (model.getStaffId() == 1l) throw new RuntimeException("Can not update administrator");
         Staff staff = toEntity(model);
+        staff.setCreatedAt(original.getCreatedAt());
         if (model.getPassword() != null) staff.setPassword(this.passwordEncoder.encode(model.getPassword()));
         else staff.setPassword(original.getPassword());
         return this.staffRepository.save(staff);

@@ -26,4 +26,6 @@ public interface ITimekeepingRepository extends JpaRepository<TimeKeeping, Long>
     Page<TimeKeeping> findAllRequestByDate(Long staffId, Long begin, Long last, Pageable page);
 
     void deleteAllByStaffStaffId(Long staff_id);
+
+    TimeKeeping findTopByStaffStaffIdAndStatusOrderByTimeInDesc(Long staffID, String status);
 }

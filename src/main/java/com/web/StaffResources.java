@@ -48,7 +48,7 @@ public class StaffResources {
     @Transactional
     @DeleteMapping("{id}")
     public ResponseDto delete(@PathVariable Long id) {
-        return ResponseDto.of(this.staffService.deleteById(id) == false ? null : true, "Delete staff with id: " + id);
+            return ResponseDto.of(this.staffService.deleteById(id) == false ? null : true, "Delete staff with id: " + id);
     }
 
     @Transactional

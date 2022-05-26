@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +49,10 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     public TimeKeeping add(TimeKeepingModel model) {
         TimeKeeping timeKeeping = TimeKeepingModel.modelToEntity(model);
         timeKeeping.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
+        if(!checkLastAttendant(timeKeeping.getStaff().getStaffId()))
         return timekeepingRepository.save(timeKeeping);
+        else
+            return null;
     }
 
     @Override
@@ -93,5 +98,24 @@ public class TimekeepingServiceimpl implements ITimeKeepingService {
     @Override
     public Page<TimeKeeping> findAllStaffRequests(Long staffId,Pageable page) {
         return this.timekeepingRepository.findAllByStaffStaffId(staffId, page);
+    }
+
+    @Override
+    public boolean checkLastAttendant(Long staffId) {
+        if(timekeepingRepository.findTopByStaffStaffIdAndStatusOrderByTimeInDesc(staffId,RequestStatusUtil.APPROVED.toString())!= null){
+            Long checkIn = timekeepingRepository.findTopByStaffStaffIdAndStatusOrderByTimeInDesc(staffId,RequestStatusUtil.APPROVED.toString()).getTimeIn();
+            if(checkIn == null){
+                return false;
+            }
+            Long startOfDay = LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            Long endOfDay = startOfDay + 86400000;
+            if(checkIn > startOfDay && checkIn < endOfDay){
+                return true;
+            }else
+                return false;
+        }else
+            return false;
+
+
     }
 }

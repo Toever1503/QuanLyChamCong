@@ -57,8 +57,13 @@ public class TimekeepingResources {
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public Object addTimekeeping(@RequestBody TimeKeepingModel timeKeepingModel) {
         TimeKeeping timeKeeping = timekeepingService.add(timeKeepingModel);
-        TimeKeepingDto timeKeepingDto = TimeKeepingDto.entityToDto(timeKeeping);
-        return ResponseDto.of(timeKeepingDto, "Add timeKeeping success");
+        if(timeKeeping != null){
+            TimeKeepingDto timeKeepingDto = TimeKeepingDto.entityToDto(timeKeeping);
+            return ResponseDto.of(timeKeepingDto, "Add timeKeeping success");
+        }else {
+            return ResponseDto.of(null,"Already checked in today");
+        }
+
     }
 
     // management approve request timeKeeping
