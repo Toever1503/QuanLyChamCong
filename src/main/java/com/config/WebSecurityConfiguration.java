@@ -25,6 +25,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     //Các URL có thể tự do truy cập //Public URLs that don't need to be authorized
     private final RequestMatcher PUBLIC_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("/api/staffs/login"),
+            new AntPathRequestMatcher("/api/salary/export_file_salaries"),
             new AntPathRequestMatcher("/swagger-resources/**"),
             new AntPathRequestMatcher("/swagger-ui/**"),
             new AntPathRequestMatcher("/v2/api-docs"),
