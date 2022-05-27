@@ -9,12 +9,16 @@ import com.entity.Position;
 import com.model.DayOffModel;
 import com.repository.IDayOffRepository;
 import com.repository.IStaffRepository;
+import com.repository.ITimekeepingRepository;
 import com.service.DayOffService;
+import com.service.ITimeKeepingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.List;
 
@@ -24,6 +28,8 @@ public class DayOffServiceImp implements DayOffService {
     IDayOffRepository dayOffRepository;
     @Autowired
     IStaffRepository staffRepository;
+    @Autowired
+    ITimekeepingRepository timekeepingRepository;
 
     //Model to Entity
     DayOff toEntity(DayOffModel model) {
@@ -60,9 +66,13 @@ public class DayOffServiceImp implements DayOffService {
     public DayOff add(DayOffModel model) {
         DayOff dayOff = this.toEntity(model);
         dayOff.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
-        dayOff.setTimeCreated(Calendar.getInstance().getTime());
-        dayOff.setStatus(RequestStatusUtil.PENDING.name());
-        return this.dayOffRepository.save(dayOff);
+        if(!checkCheckIn(model.getTime_start(), model.getTime_end(),dayOff.getStaff().getStaffId())){
+            dayOff.setTimeCreated(Calendar.getInstance().getTime());
+            dayOff.setStatus(RequestStatusUtil.PENDING.name());
+            return this.dayOffRepository.save(dayOff);
+        }else {
+            return null;
+        }
     }
 
     @Override
@@ -75,7 +85,7 @@ public class DayOffServiceImp implements DayOffService {
     public DayOff update(DayOffModel model) {
         DayOff dayOff = this.toEntity(model);
         dayOff.setStaff(this.staffRepository.findById(model.getStaff()).orElseThrow(() -> new RuntimeException("Staff Not found")));
-        return this.dayOffRepository.save(dayOff);
+            return this.dayOffRepository.save(dayOff);
     }
 
     //Xóa yêu cầu nghỉ// Delete day off request
@@ -120,4 +130,19 @@ public class DayOffServiceImp implements DayOffService {
     public Page<DayOff> findAllStaffRequests(Long staffId, Pageable page) {
         return this.dayOffRepository.findAllByStaffStaffId(staffId, page);
     }
+
+    @Override
+    public boolean checkCheckIn(Long timestart, Long timeend, Long staffId) {
+            if(timekeepingRepository.findTopByStaffStaffIdAndStatusOrderByTimeInDesc(staffId,RequestStatusUtil.APPROVED.toString())!= null){
+                Long checkIn = timekeepingRepository.findTopByStaffStaffIdAndStatusOrderByTimeInDesc(staffId,RequestStatusUtil.APPROVED.toString()).getTimeIn();
+                if(checkIn == null){
+                    return false;
+                }
+                if(checkIn > timestart && checkIn < timeend){
+                    return true;
+                }else
+                    return false;
+            }else
+                return false;
+        }
 }

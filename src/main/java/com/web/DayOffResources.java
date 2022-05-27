@@ -58,7 +58,11 @@ public class DayOffResources {
     @PostMapping
     public ResponseDto add(@RequestBody @Valid DayOffModel model) {
         model.setId(null);
-        return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.add(model)), "Add request dayoff");
+        if(this.dayOffService.add(model)!=null){
+            return ResponseDto.of(DayOffDTO.toDto(this.dayOffService.add(model)), "Add request dayoff");
+        }else
+            return ResponseDto.of(null,"Already checked in, cannot request a Day off");
+
     }
 
     @Transactional
