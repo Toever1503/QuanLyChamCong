@@ -22,6 +22,8 @@ public class TimelateModel {
 
     private Long timeIn;
 
+    private Long dayLate;
+
     private String note;
 
     private String status;
@@ -34,6 +36,7 @@ public class TimelateModel {
         return TimeLate.builder()
                 .id(model.getId())
                 .timeIn(model.getTimeIn())
+                .dayLate(model.getDayLate())
                 .note(model.getNote())
                 .status(model.getStatus())
                 .build();

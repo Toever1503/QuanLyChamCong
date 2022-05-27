@@ -26,6 +26,9 @@ public class TimeLate {
     @Column(name ="note")
     private String note;
 
+    @Column(name = "dayLate")
+    private Long dayLate;
+
     @Column(name = "status")
     private String status;
 

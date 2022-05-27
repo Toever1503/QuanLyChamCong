@@ -39,7 +39,7 @@ public class TimeLateResources {
     @GetMapping
     public Object getAllTimeLatePage(Pageable page) {
         Page<TimeLateDto> timeLateDtos = timeLateService.findAll(page).map(TimeLateDto::entityToDto);
-        return ResponseDto.of(timeLateDtos, "Get all TimeKeepings Page");
+        return ResponseDto.of(timeLateDtos, "Get all TimeLate Page");
     }
 
     @RolesAllowed(Position.ADMINISTRATOR)

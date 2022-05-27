@@ -18,6 +18,8 @@ public class TimeLateDto {
 
     private Long timeIn;
 
+    private Long dayLate;
+
     private String note;
 
     private String status;
@@ -30,6 +32,7 @@ public class TimeLateDto {
         return TimeLateDto.builder()
                 .id(timeLate.getId())
                 .timeIn(timeLate.getTimeIn())
+                .dayLate(timeLate.getDayLate())
                 .note(timeLate.getNote())
                 .status(timeLate.getStatus())
                 .staff(timeLate.getStaff().getStaffName())
