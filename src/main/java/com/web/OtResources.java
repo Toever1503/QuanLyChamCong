@@ -8,14 +8,17 @@ import com.model.OtModel;
 import com.entity.Position;
 import com.service.OTService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("api/ots")
 @RestController
+@Validated
 public class OtResources {
     private final OTService otService;
 
@@ -51,14 +54,14 @@ public class OtResources {
 
     @Transactional
     @PostMapping
-    public ResponseDto add(@RequestBody OtModel model) {
+    public ResponseDto add(@Valid @RequestBody OtModel model) {
         model.setId(null);
         return ResponseDto.of(OTDto.toDto(this.otService.add(model)), "Add request ot");
     }
 
     @Transactional
     @PutMapping("{id}")
-    public ResponseDto update(@PathVariable Long id, @RequestBody OtModel model) {
+    public ResponseDto update(@PathVariable Long id,@Valid @RequestBody OtModel model) {
         model.setId(id);
         return ResponseDto.of(OTDto.toDto(this.otService.update(model)), "Add request ot");
     }

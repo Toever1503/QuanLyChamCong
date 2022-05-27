@@ -14,14 +14,17 @@ import io.swagger.annotations.Authorization;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/timeLate")
+@Validated
 public class TimeLateResources {
     private final ITimeLateService timeLateService;
 
@@ -65,7 +68,7 @@ public class TimeLateResources {
     @Transactional
     @PostMapping
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    public Object addTimeLate(@RequestBody TimelateModel timelateModel) {
+    public Object addTimeLate(@Valid @RequestBody TimelateModel timelateModel) {
         TimeLate timeLate = timeLateService.add(timelateModel);
         TimeLateDto timeLateDto = TimeLateDto.entityToDto(timeLate);
         return ResponseDto.of(timeLateDto, "Add request time late success");

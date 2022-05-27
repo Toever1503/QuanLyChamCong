@@ -10,14 +10,17 @@ import com.model.TimeKeepingModel;
 import com.service.ITimeKeepingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/timekeeping")
+@Validated
 public class TimekeepingResources {
     private final ITimeKeepingService timekeepingService;
 
@@ -55,7 +58,7 @@ public class TimekeepingResources {
     @Transactional
     @PostMapping
     @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
-    public Object addTimekeeping(@RequestBody TimeKeepingModel timeKeepingModel) {
+    public Object addTimekeeping(@Valid @RequestBody TimeKeepingModel timeKeepingModel) {
         TimeKeeping timeKeeping = timekeepingService.add(timeKeepingModel);
         TimeKeepingDto timeKeepingDto = TimeKeepingDto.entityToDto(timeKeeping);
         return ResponseDto.of(timeKeepingDto, "Add timeKeeping success");

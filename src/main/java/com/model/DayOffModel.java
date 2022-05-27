@@ -18,13 +18,14 @@ public class DayOffModel {
     private Long id;
 
     @ApiModelProperty(notes = "id của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
+    @NotNull
     private Long staff;
 
     @ApiModelProperty(notes = "note của nhân viên gửi yêu cầu", dataType = "Long", example = "1")
     @NotNull
     private String note;
 
-    @ApiModelProperty(notes = "thời gian bắt đầu xin nghỉ, tính bằng miliseconds", dataType = "date", example = "191481941298410")
+    @ApiModelProperty(notes = "thời gian bắt đầu xin nghỉ, tính bằng miliseconds", dataType = "Long", example = "191481941298410")
     @Positive
     @NotNull
     private Long time_start;
