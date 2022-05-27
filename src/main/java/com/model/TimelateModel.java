@@ -30,6 +30,11 @@ public class TimelateModel {
     @NotNull
     @Positive
     private Long timeIn;
+  
+    @ApiModelProperty(notes = "Ngay xin di muon", dataType = "Long", example = "516161561")
+    @NotNull
+    @Positive
+    private Long dayLate;
 
     @ApiModelProperty(notes = "ghi chu khi di muon", dataType = "String", example = "xe hong")
     @NotBlank
@@ -52,6 +57,7 @@ public class TimelateModel {
         return TimeLate.builder()
                 .id(model.getId())
                 .timeIn(model.getTimeIn())
+                .dayLate(model.getDayLate())
                 .note(model.getNote())
                 .status(model.getStatus())
                 .build();

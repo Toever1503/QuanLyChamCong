@@ -18,7 +18,12 @@ public class OtModel {
 
     @ApiModelProperty(notes = "id cua Staff", dataType = "Long", example = "1")
     @NotNull
-    private Long staff;
+    private Long staff_id;
+  
+    @ApiModelProperty(notes = "Ghi chu tang ca de lam gi", dataType = "String", example = "fix bug")
+    @NotNull
+    @NotBlank
+    private String note;
 
     @ApiModelProperty(notes = "thoi gian bat dau OT tinh theo milliseconds", dataType = "date", example = "124667348")
     @NotNull
@@ -41,5 +46,4 @@ public class OtModel {
     @NotNull
     @NotBlank
     private String status;
-
 }

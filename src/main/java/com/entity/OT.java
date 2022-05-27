@@ -30,7 +30,7 @@ public class OT {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time_created")
-    private Date time_created;
+    private Date timeCreated;
     @Column(name = "multiply")
     private Float multiply;
     @Column(name = "status")

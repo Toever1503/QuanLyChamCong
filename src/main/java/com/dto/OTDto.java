@@ -20,7 +20,7 @@ public class OTDto {
     private String note;
     private Long time_start;
     private Long time_end;
-    private java.util.Date time_created;
+    private java.util.Date timeCreated;
     private Float multiply;
     private String status;
 
@@ -33,7 +33,7 @@ public class OTDto {
                 .note(entity.getNote())
                 .time_start(entity.getTime_start())
                 .time_end(entity.getTime_end())
-                .time_created(entity.getTime_created())
+                .timeCreated(entity.getTimeCreated())
                 .multiply(entity.getMultiply())
                 .status(entity.getStatus())
                 .build();

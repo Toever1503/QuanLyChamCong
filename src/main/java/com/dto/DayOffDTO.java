@@ -14,7 +14,7 @@ public class DayOffDTO {
     private String note;
     private Long time_start;
     private Long time_end;
-    private java.util.Date time_created;
+    private java.util.Date timeCreated;
     private String status;
 
     //Entity to DTO
@@ -26,7 +26,7 @@ public class DayOffDTO {
                 .note(entity.getNote())
                 .time_start(entity.getTime_start())
                 .time_end(entity.getTime_end())
-                .time_created(entity.getTime_created())
+                .timeCreated(entity.getTimeCreated())
                 .status(entity.getStatus())
                 .build();
     }

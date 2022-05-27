@@ -2,9 +2,8 @@ package com.service.impl;
 
 import com.Util.RequestStatusUtil;
 import com.Util.SecurityUtil;
-import com.Util.TimeUtil;
 import com.entity.OT;
-import com.entity.OtModel;
+import com.model.OtModel;
 import com.entity.Position;
 import com.repository.IOTRepository;
 import com.repository.IStaffRepository;
@@ -57,7 +56,7 @@ public class OTServiceImp implements OTService {
         OT entity = toEntity(model);
         entity.setStaff(this.staffRepository.findById(SecurityUtil.getCurrentUserId()).orElseThrow(() -> new RuntimeException("Staff Not found")));
         entity.setStatus(RequestStatusUtil.PENDING.name());
-        entity.setTime_created(Calendar.getInstance().getTime());
+        entity.setTimeCreated(Calendar.getInstance().getTime());
         return this.otRepository.save(entity);
     }
 

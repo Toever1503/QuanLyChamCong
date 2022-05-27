@@ -88,7 +88,8 @@ public class StaffServiceImpl implements IStaffService {
 
     @Override
     public List<Staff> findAll() {
-        return null;
+        if(SecurityUtil.hasRole(Position.ADMINISTRATOR)) return this.staffRepository.findAll();
+        return this.staffRepository.findAll();
     }
     //Tìm tất cả nhân viên theo quản lí hoặc không // Find all staff by manager or else
     @Override
